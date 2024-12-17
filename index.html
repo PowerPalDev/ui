@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <title>PowerPal</title>
+    <style>
+        :root {
+            --color-primary: #088f51;
+            --color-green-light: #76a18d;
+            --color-green-faint: #eaf2ee;
+            --color-3: #088f51;
+            --radius-small: 8px;
+            --background-image-overlay:rgba(0, 0, 0, .7);
+            --background-image-overlay-blur:rgba(51, 62, 54, 0.3);
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #202020;
+            color: #ffffff;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 8em;
+            height: 100vh;
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .sidebar button {
+            margin: 15px 0;
+            background-color: var(--background-image-overlay-blur);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+
+            width: 100%;
+            height:82px;
+            margin: 0;
+            padding: 14px;
+            color: var(--color-green-faint);
+            font-size: 14px;
+            cursor: pointer;
+            border-top: 0.7px solid var(--color-green-light);
+            border-right: 0.7px solid var(--color-green-light);
+            border-bottom: 0px;
+            border-left: 0px;
+        }
+
+        .sidebar button:first-child {
+            margin-top: 10px;
+            border-radius: 0 10px 0 0;
+        }
+
+        .sidebar button:last-child {
+            border-bottom: 0.7px solid var(--color-green-light);
+            border-radius: 0 0 10px 0;
+        }
+
+        .sidebar button i{
+            font-size: 20px;
+        }
+        .main-content{
+            margin-left: 130px;
+            width: 600px;
+        }
+
+        .main-content button {
+            margin: 15px 0;
+            background-color: transparent;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            margin: 0;
+            padding: 8px 20px;
+            color: var(--color-green-faint);
+            font-size: 16px;
+            border: 0px;
+            border-bottom: 0.7px solid var(--color-green-light);
+        }
+
+        .main-content button:last-child{
+            width: 350px;
+            min-width: 350px;    
+        }
+
+        .main-content button.active {
+            border-top: 0.7px solid var(--color-green-light);
+            border-right: 0.7px solid var(--color-green-light);
+            border-left: 0.7px solid var(--color-green-light);
+            border-bottom: 0px;
+            border-radius: 10px 10px 0 0;
+            font-weight: 600;
+        }
+        
+        .main-content button::after {
+            content: "";
+            top: 50%;
+            transform: translateY(-50%);
+            -webkit-transform: translateY(-50%);
+            -moz-transform: translateY(-50%);
+            -ms-transform: translateY(-50%);
+            position: absolute;
+            width: 1px;
+            height: 32px;
+            background: var(--color-3);
+            right: -0px;
+        }
+        
+        .main-content button:nth-last-child(2)::after{
+            width: 0px;
+        }
+        .main-content button:last-child::after{
+            width: 0px;
+        }
+            
+
+
+        .title {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .device-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .device-card {
+            background-color: #333333;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .device-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .device-name {
+            font-size: 1.2em;
+        }
+
+        .device-status {
+            font-size: 0.9em;
+            color: #aaaaaa;
+        }
+
+        .power-btn {
+            background-color: #0055ff;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: white;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+
+
+
+        .logo-container {
+            display: flex;
+            justify-content: left;
+            margin-bottom: 10px;
+            margin-left: 10px;
+            margin-top: 10px;
+        }
+
+        .sidebar button.active::before {
+            content: "";
+            position: absolute;
+            width: 4px;
+            height: 40px;
+            border-radius: var(--radius-small);
+            background: var(--color-primary);
+            right: 0;
+        }
+        .background-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("https://ds.seisho.us/img/solar1.jpg");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -1;
+            filter: blur(1px);
+            &::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: var(--background-image-overlay);
+            }
+        }
+
+        .time-period{
+            width: 100%;
+            align-items: center;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid grey;
+        }
+        .time-period-label{
+            font-weight: 600;
+        }
+
+        .energy-table {
+            margin: auto;
+            max-width: 80vh;
+            border-collapse: separate;
+            border-spacing: 15px;
+            background-color: transparent;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }   
+
+        .align-cell {
+            vertical-align: middle;
+        }
+
+        .icon-green {
+            color: #39ff14;
+            font-size: 2rem;
+        }
+
+        .align-cell .energy-box {
+            min-height: 126px;
+            vertical-align: middle;
+        }
+
+        .energy-box {
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            width: 150px;
+            border: 1px solid var(--color-green-light);
+        }
+
+        .energy-values {
+            margin: auto;
+            width: 80%;
+        }
+
+        .energy-value {
+            font-size: 16px;
+            vertical-align: middle;
+        }
+
+        .energy-label {
+            font-size: 14px;
+            color: gray;
+        }
+
+        .icon-yellow {
+            color: #f1c40f;
+            font-size: 2rem;
+        }
+
+        .icon-orange {
+            color: #e67e22;
+            font-size: 2rem;
+        }
+
+        .icon-purple {
+            color: #8e44ad;
+            font-size: 2rem;
+        }
+
+        .red {
+            color: #fe2929;
+        }
+        .green {
+            color: #65bb6a;
+        }   
+        
+        .big-number {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .rightAlign {
+            text-align: right;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="background-image">
+    </div>
+    
+    
+
+    <!-- Sidebar -->
+    <div class="logo-container">
+        <img src="https://ds.seisho.us/svg/powerPal_header.svg" alt="PowerPal Logo" height="40">
+    </div>
+    <div class="sidebar">
+        <div class="sidebar-buttons">
+            <button class="active"><i class="fa-solid fa-gauge-high"></i><br>Dashboard</button>
+            <button><i class="fa-solid fa-house"></i><br>My home</button>
+            <button><i class="fa-solid fa-bolt"></i><br>Energy</button>
+            <button><i class="fa-solid fa-gear"></i><br>Settings</button>
+            <button><i class="fa-solid fa-circle-question"></i><br>Support</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        
+        <div class="tab">
+            <button class="active" onclick="toggleTab(event, 'Totals')">Totals
+            </button><button onclick="openCity(event, 'Chart')">Chart
+            </button><button onclick="openCity(event, '???')">???
+            </button><button>&nbsp;</button>
+        </div>
+        <div id="Totals">
+            <div class="time-period"><span class="time-period-label">Period: </span>
+                <select>
+                    <option value="1">Last 24 hours</option>
+                    <option value="2">Today</option>
+                    <option value="3">Last 7 days</option>
+                    <option value="4">This week</option>
+                    <option value="5">Last week</option>
+                    <option value="6">This month</option>
+                    <option value="7">Last month</option>
+                </select>
+                OR
+            < DATE TIME PICKER >
+            </div>
+
+            <table class="energy-table">
+                <tbody><tr>
+                    <td class="align-cell">
+                        <div class="energy-box">
+                            <i class="fas fa-battery-half icon-green"></i>
+                            <div class="energy-values">
+                                <table>
+                                    <tbody><tr>
+                                        <td class="energy-label in-label">In</td>
+                                        <td class="energy-value rightAlign">
+                                            <span id="batteryCharge" class="green big-number">3.17</span>
+                                            
+                                        </td>
+                                        <td>
+                                            <span class="small-text">kWh</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="energy-label out-label">Out</td>
+                                        <td class="energy-value rightAlign">
+                                            <span id="batteryDischarge" class="red big-number">0.13</span>
+                                        </td>
+                                        <td>
+                                            <span class="small-text">kWh</span>
+                                        </td>
+                                    </tr>
+                                </tbody></table>
+                            </div>
+                            <p class="energy-label">Battery Usage</p>
+                        </div>
+                    </td>
+                    <td class="align-cell">
+                        <div class="energy-box">
+                            <i class="fas fa-solar-panel icon-yellow"></i>
+                            <p class="energy-value">
+                                <span id="production" class="green big-number">0.58</span>
+                                <span class="small-text">kWh</span>
+                            </p>
+                            <p class="energy-label">Solar Production</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="energy-box">
+                            <i class="fas fa-plug icon-purple"></i>
+                            <p class="energy-value">
+                                <span id="flow" class="red big-number">3.27</span>
+                                <span class="small-text">kWh</span>
+                            </p>
+                            <p class="energy-label">Grid Imported</p>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="energy-box">
+                            <i class="fas fa-charging-station icon-purple"></i>
+                            <p class="energy-value">
+                                <span id="evCharge" class="red big-number">0.00</span>
+                                <span class="small-text">kWh</span>
+                            </p>
+                            <p class="energy-label">EV Charged</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+        
+                    <td>
+                        <div class="energy-box">
+                            <i class="fas fa-home icon-orange"></i>
+                            <p class="energy-value">
+                                <span id="consumption" class="red big-number">0.82</span>
+                                <span class="small-text">kWh</span>
+                            </p>
+                            <p class="energy-label">Home Consumption</p>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="energy-box">
+                            <i class="fas fa-euro-sign icon-orange"></i>
+                            <p class="energy-value">
+                                <span id="savings" class="green big-number">0.04</span>
+                            </p>
+                            <p class="energy-label">Saved</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody></table>
+            
+        </div>
+        <div id="Chart">
+
+        </div>
+
+
+    </div>
+
+
+</body>
+
+</html>
