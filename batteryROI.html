@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Efficiency Calculator</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Energy Efficiency Calculator</h2>
+        
+        <form id="efficiencyForm">
+            <!-- Efficiency Parameters Section -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">System Parameters</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <h5 class="mb-3">Inveter Parameters</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="inverterEfficiency" class="form-label">η inverter</label>
+                                    <input type="number" class="form-control" id="inverterEfficiency" value="0.93" step="0.01">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="price" class="form-label">Price</label>
+                                    <input type="number" class="form-control" id="price" value="1000" step="1">
+                                </div>
+                            </div>
+                        </div>
+
+                        <h5 class="mb-3">Battery Parameters</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="batteryEfficiency" class="form-label">η battery</label>
+                                    <input type="number" class="form-control" id="batteryEfficiency" value="0.95" step="0.01">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="capacity" class="form-label">Capacity</label>
+                                    <input type="number" class="form-control" id="capacity" value="10000" step="0.01">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="price" class="form-label">Price</label>
+                                    <input type="number" class="form-control" id="price" value="2000" step="1">
+                                </div>
+                            </div>
+                        </div>
+
+                        <h5 class="mb-3">Other System Parameters</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="wiringEfficiency" class="form-label">η other (wiring)</label>
+                                    <input type="number" class="form-control" id="wiringEfficiency" value="0.99" step="0.01">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="price" class="form-label">Other Cost</label>
+                                    <input type="number" class="form-control" id="price" value="500" step="1">
+                                </div>
+                            </div>
+                        </div>
+
+                        <h5 class="mb-3">System Usage Parameters</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="energy" class="form-label">System Usage Factor %</label>
+                                    <input type="number" class="form-control" id="energy" value="90">
+                                </div>
+                            </div>
+                        </div>
+
+                        <h5 class="mb-3">Energy Cost Parameters</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="energy" class="form-label">Night Cost</label>
+                                    <input type="number" class="form-control" id="energy" value="0.14301">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="energy" class="form-label">Daily Cost</label>
+                                    <input type="number" class="form-control" id="energy" value="0.26378">
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <h5 class="mb-3">Computed Efficiency Parameters</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="singleTrip" class="form-label">η Single Trip</label>
+                                    <input readonly type="number" class="form-control" id="singleTrip" value="0.874665" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="roundTrip" class="form-label">η Round Trip</label>
+                                    <input readonly type="number" class="form-control" id="roundTrip" value="0.765038862" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <!-- Energy Calculations Section -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Energy Calculations</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="toLoad" class="form-label">Energy To Load</label>
+                                    <input type="number" class="form-control" id="toLoad" value="10.289" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="cost" class="form-label">Cost To Load</label>
+                                    <input type="number" class="form-control" id="cost" value="0.14301" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="toLoad" class="form-label">Usable Energy</label>
+                                    <input type="number" class="form-control" id="toLoad" value="7.871985" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="cost" class="form-label">Value</label>
+                                    <input type="number" class="form-control" id="cost" value="0.26378" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="usable" class="form-label">Usable</label>
+                                <input type="number" class="form-control" id="usable" value="7.871985" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="day" class="form-label">Day</label>
+                                <input type="number" class="form-control" id="day" value="0.26378">
+                            </div>
+                        </div>
+
+                        <h5 class="mb-3">Economic Calculations</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="singleTrip" class="form-label">Daily Saving €</label>
+                                    <input readonly type="number" class="form-control" id="singleTrip" value="0.604948820" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="singleTrip" class="form-label">Estimated ROI</label>
+
+                                    <input readonly class="form-control" id="singleTrip" value="15 years 11 months 20 days" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Calculate</button>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
