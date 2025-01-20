@@ -86,8 +86,8 @@
         }
 
         .main-content button:last-child{
-            width: 350px;
-            min-width: 350px;    
+            width: 300px;
+            min-width: 300px;    
         }
 
         .main-content button.active {
@@ -325,125 +325,176 @@
 
     <!-- Main Content -->
     <div class="main-content">
+        <div id="Dashboard"></div>
+
         
         <div class="tab">
-            <button class="active" onclick="toggleTab(event, 'Totals')">Totals
-            </button><button onclick="openCity(event, 'Chart')">Chart
-            </button><button onclick="openCity(event, '???')">???
+            <button class="active" onclick="toggleTab(event, 'Summary')">Summary
+            </button><button onclick="toggleTab(event, 'Realtime')">Realtime
+            </button><button onclick="toggleTab(event, 'History')">History
             </button><button>&nbsp;</button>
         </div>
-        <div id="Totals">
-            <div class="time-period"><span class="time-period-label">Period: </span>
-                <select>
-                    <option value="1">Last 24 hours</option>
-                    <option value="2">Today</option>
-                    <option value="3">Last 7 days</option>
-                    <option value="4">This week</option>
-                    <option value="5">Last week</option>
-                    <option value="6">This month</option>
-                    <option value="7">Last month</option>
-                </select>
-                OR
-            < DATE TIME PICKER >
-            </div>
-
-            <table class="energy-table">
-                <tbody><tr>
-                    <td class="align-cell">
-                        <div class="energy-box">
-                            <i class="fas fa-battery-half icon-green"></i>
-                            <div class="energy-values">
-                                <table>
-                                    <tbody><tr>
-                                        <td class="energy-label in-label">In</td>
-                                        <td class="energy-value rightAlign">
-                                            <span id="batteryCharge" class="green big-number">3.17</span>
-                                            
-                                        </td>
-                                        <td>
-                                            <span class="small-text">kWh</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="energy-label out-label">Out</td>
-                                        <td class="energy-value rightAlign">
-                                            <span id="batteryDischarge" class="red big-number">0.13</span>
-                                        </td>
-                                        <td>
-                                            <span class="small-text">kWh</span>
-                                        </td>
-                                    </tr>
-                                </tbody></table>
+        <div id="DashboardContent">
+            <div id="Summary">
+                <div class="time-period"><span class="time-period-label">Period: </span>
+                    <select>
+                        <option value="1">Last 24 hours</option>
+                        <option value="2">Today</option>
+                        <option value="3">Last 7 days</option>
+                        <option value="4">This week</option>
+                        <option value="5">Last week</option>
+                        <option value="6">This month</option>
+                        <option value="7">Last month</option>
+                    </select>
+                    OR
+                < DATE TIME PICKER >
+                </div>
+    
+                <table class="energy-table">
+                    <tbody><tr>
+                        <td class="align-cell">
+                            <div class="energy-box">
+                                <i class="fas fa-battery-half icon-green"></i>
+                                <div class="energy-values">
+                                    <table>
+                                        <tbody><tr>
+                                            <td class="energy-label in-label">In</td>
+                                            <td class="energy-value rightAlign">
+                                                <span id="batteryCharge" class="green big-number">3.17</span>
+                                                
+                                            </td>
+                                            <td>
+                                                <span class="small-text">kWh</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="energy-label out-label">Out</td>
+                                            <td class="energy-value rightAlign">
+                                                <span id="batteryDischarge" class="red big-number">0.13</span>
+                                            </td>
+                                            <td>
+                                                <span class="small-text">kWh</span>
+                                            </td>
+                                        </tr>
+                                    </tbody></table>
+                                </div>
+                                <p class="energy-label">Battery Usage</p>
                             </div>
-                            <p class="energy-label">Battery Usage</p>
-                        </div>
-                    </td>
-                    <td class="align-cell">
-                        <div class="energy-box">
-                            <i class="fas fa-solar-panel icon-yellow"></i>
-                            <p class="energy-value">
-                                <span id="production" class="green big-number">0.58</span>
-                                <span class="small-text">kWh</span>
-                            </p>
-                            <p class="energy-label">Solar Production</p>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="energy-box">
-                            <i class="fas fa-plug icon-purple"></i>
-                            <p class="energy-value">
-                                <span id="flow" class="red big-number">3.27</span>
-                                <span class="small-text">kWh</span>
-                            </p>
-                            <p class="energy-label">Grid Imported</p>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="energy-box">
-                            <i class="fas fa-charging-station icon-purple"></i>
-                            <p class="energy-value">
-                                <span id="evCharge" class="red big-number">0.00</span>
-                                <span class="small-text">kWh</span>
-                            </p>
-                            <p class="energy-label">EV Charged</p>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-        
-                    <td>
-                        <div class="energy-box">
-                            <i class="fas fa-home icon-orange"></i>
-                            <p class="energy-value">
-                                <span id="consumption" class="red big-number">0.82</span>
-                                <span class="small-text">kWh</span>
-                            </p>
-                            <p class="energy-label">Home Consumption</p>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="energy-box">
-                            <i class="fas fa-euro-sign icon-orange"></i>
-                            <p class="energy-value">
-                                <span id="savings" class="green big-number">0.04</span>
-                            </p>
-                            <p class="energy-label">Saved</p>
-                        </div>
-                    </td>
-                </tr>
-            </tbody></table>
+                        </td>
+                        <td class="align-cell">
+                            <div class="energy-box">
+                                <i class="fas fa-solar-panel icon-yellow"></i>
+                                <p class="energy-value">
+                                    <span id="production" class="green big-number">0.58</span>
+                                    <span class="small-text">kWh</span>
+                                </p>
+                                <p class="energy-label">Solar Production</p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="energy-box">
+                                <i class="fas fa-plug icon-purple"></i>
+                                <p class="energy-value">
+                                    <span id="flow" class="red big-number">3.27</span>
+                                    <span class="small-text">kWh</span>
+                                </p>
+                                <p class="energy-label">Grid Imported</p>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="energy-box">
+                                <i class="fas fa-charging-station icon-purple"></i>
+                                <p class="energy-value">
+                                    <span id="evCharge" class="red big-number">0.00</span>
+                                    <span class="small-text">kWh</span>
+                                </p>
+                                <p class="energy-label">EV Charged</p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
             
+                        <td>
+                            <div class="energy-box">
+                                <i class="fas fa-home icon-orange"></i>
+                                <p class="energy-value">
+                                    <span id="consumption" class="red big-number">0.82</span>
+                                    <span class="small-text">kWh</span>
+                                </p>
+                                <p class="energy-label">Home Consumption</p>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="energy-box">
+                                <i class="fas fa-euro-sign icon-orange"></i>
+                                <p class="energy-value">
+                                    <span id="savings" class="green big-number">0.04</span>
+                                </p>
+                                <p class="energy-label">Saved</p>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody></table>
+                
+            </div>
+            <div id="Realtime">
+            </div>
+            <div id="History">
+                <div class="time-period"><span class="time-period-label">Period: </span>
+                    <select>
+                        <option value="1">Last 24 hours</option>
+                        <option value="2">Today</option>
+                        <option value="3">Last 7 days</option>
+                        <option value="4">This week</option>
+                        <option value="5">Last week</option>
+                        <option value="6">This month</option>
+                        <option value="7">Last month</option>
+                    </select>
+                </div>
+            </div>
+        
+       
         </div>
-        <div id="Chart">
-
-        </div>
-
+    </div>
 
     </div>
 
-
+    <script>
+        // Hide all tabs except Summary by default
+        const dashboardTabs = document.querySelectorAll('#DashboardContent > div');
+        dashboardTabs.forEach(tab => {
+            if (tab.id === 'Summary') {
+                tab.style.display = 'block';  // Show Summary tab by default
+            } else {
+                tab.style.display = 'none';   // Hide other tabs
+            }
+        });
+        
+        function toggleTab(event, tabName) {
+            // Get all tab buttons and remove the active class
+            const tabButtons = document.querySelectorAll('.tab button');
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Add active class to the clicked button
+            event.currentTarget.classList.add('active');
+            
+            // Hide all tab content
+            const dashboardTabs = document.querySelectorAll('#DashboardContent > div');
+            dashboardTabs.forEach(tab => {
+                tab.style.display = 'none';
+            });
+            
+            // Show the selected tab content
+            const selectedTab = document.getElementById(tabName);
+            if (selectedTab) {
+                selectedTab.style.display = 'block';
+            }
+        }
+    </script>
 </body>
 
 </html>
