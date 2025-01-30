@@ -141,7 +141,8 @@
                                         </div>
                                     </div>
                                     
-                                    <small class="form-text text-muted">How much each day the system is charged / discharged ? Not always you use the full capacity (not at home etc)</small>
+                                    <small class="form-text text-muted">How much each day the system is charged / discharged ? Not always you use the full capacity (not at home etc).<br>
+                                        Based on how much the use actually use the battery, we can optimize the battery SOC and thus extend the life</small>
                                 </div>
                             </div>
                         </div>
@@ -540,11 +541,12 @@ function calculate() {
     // Estimate life cycle left
     //equivalent cicle used for the days of night process
     let cicleUsed4DN = daysToPay / getLifeCycleMultiplier(form.maxSOC * form.systemUsageFactor / 100); 
+
     //equivalent cicle used for the PV storage
     let bufferedCapacity = bufferedEnergy / actualBatteryCapacity;
     let life4Pv = getLifeCycleMultiplier(form.maxSOC * form.systemUsageFactor / 100 * bufferedCapacity ) ;
-    let life4PvUsed = life4Pv * bufferedCapacity;
-    let cicleUsed4PV = daysToPay * life4PvUsed;
+    
+    let cicleUsed4PV = daysToPay / life4Pv;
 
     //equivalent cicle used for the days of night process
     let lifeCycleUsed = cicleUsed4DN + cicleUsed4PV;
@@ -623,12 +625,14 @@ function lerp(x, x1, x2, y1, y2) {
 }
 
 function getLifeCycleMultiplier(maxSOC) {
-    // Define our key points on the curve
+    //Those point are based on a few paper and few websites battery that sell and advertise their battery life, 
+    //https://www.sciencedirect.com/science/article/pii/S2589004224015128 table3
     // [SOC, multiplier]
     const points = [
+        [50, 6.0],
         [70, 3.0],  // 200% increase (3x)
-        [90, 1.5],  // 50% increase (1.5x)
-        [100, 1.0]  // No increase (1x) at 100%
+        [90, 0.9],  // 50% increase (1.5x)
+        [100, 0.8]  // No increase (1x) at 100%
     ];
 
     // Clamp maxSOC between 0 and 100
