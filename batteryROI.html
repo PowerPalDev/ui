@@ -82,8 +82,8 @@
                             <div class="col-md-3">
                                 <div class="mb-3">
                                     <label for="maxSOC" class="form-label">Max SOC</label>
-                                    <div class="input-group">
-                                        <input type="number" class="form-control text-end" id="maxSOC" value="90" step="1">
+                                    <div class="input-group"> 
+                                        <input type="number" class="form-control text-end" id="maxSOC" value="90" max="100" min="1" step="1">
                                         <span class="input-group-text">%</span>
                                     </div>
                                     <small class="form-text text-muted">Chargin up to 90% will lead to a much longer life of the battery</small>
@@ -142,7 +142,7 @@
                                     </div>
                                     
                                     <small class="form-text text-muted">How much each day the system is charged / discharged ? Not always you use the full capacity (not at home etc).<br>
-                                        Based on how much the use actually use the battery, we can optimize the battery SOC and thus extend the life</small>
+                                        Based on how much the user actually use the battery, we can optimize the battery SOC and thus extend the life</small>
                                 </div>
                             </div>
                         </div>
@@ -492,7 +492,8 @@ function calculate() {
     document.getElementById("singleTripEfficiency").value = singleTripEfficiency;
     document.getElementById("roundTripEfficiency").value = roundTripEfficiency;
 
-    let actualBatteryCapacity = form.batteryCapacity * (form.maxSOC / 100) * (form.systemUsageFactor / 100);
+    let maxSOC = Math.min(form.maxSOC,form.systemUsageFactor) / 100;
+    let actualBatteryCapacity = form.batteryCapacity * maxSOC;
     // Energy stored in the battery
     energyToLoad = actualBatteryCapacity / singleTripEfficiency;
     document.getElementById("energyToLoad").value = (energyToLoad).toFixed(3);
@@ -540,11 +541,11 @@ function calculate() {
 
     // Estimate life cycle left
     //equivalent cicle used for the days of night process
-    let cicleUsed4DN = daysToPay / getLifeCycleMultiplier(form.maxSOC * form.systemUsageFactor / 100); 
+    let cicleUsed4DN = daysToPay / getLifeCycleMultiplier(maxSOC); 
 
     //equivalent cicle used for the PV storage
     let bufferedCapacity = bufferedEnergy / actualBatteryCapacity;
-    let life4Pv = getLifeCycleMultiplier(form.maxSOC * form.systemUsageFactor / 100 * bufferedCapacity ) ;
+    let life4Pv = getLifeCycleMultiplier(bufferedCapacity ) ;
     
     let cicleUsed4PV = daysToPay / life4Pv;
 
@@ -629,10 +630,11 @@ function getLifeCycleMultiplier(maxSOC) {
     //https://www.sciencedirect.com/science/article/pii/S2589004224015128 table3
     // [SOC, multiplier]
     const points = [
-        [50, 6.0],
-        [70, 3.0],  // 200% increase (3x)
-        [90, 0.9],  // 50% increase (1.5x)
-        [100, 0.8]  // No increase (1x) at 100%
+        [0.30, 10.0],
+        [0.50, 3.0],
+        [0.70, 3.0],  // 
+        [0.90, 1.3],  // 
+        [0.1, 1]  // No increase (1x) at 100%
     ];
 
     // Clamp maxSOC between 0 and 100
