@@ -78,6 +78,18 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="maxSOC" class="form-label">Max SOC</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control text-end" id="maxSOC" value="90" step="1">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                    <small class="form-text text-muted">Chargin up to 90% will lead to a much longer life of the battery</small>
+                                </div>
+                            </div>
+
                             <div class="col-md-3">
                                 <div class="mb-3">
                                     <label for="batteryPrice" class="form-label">Price</label>
@@ -86,6 +98,15 @@
                                         <span class="input-group-text">€</span>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="advertiserLifeCycle" class="form-label">Advertiser Life Cycle</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control text-end" id="advertiserLifeCycle" value="5000" step="1">
+                                    </div>
+                                </div>
+                                <small class="form-text text-muted">Defined as the number of 100% cicle after which the battery has 80% of its original capacity (after that will quickly degrade)</small>
                             </div>
                         </div>
 
@@ -120,7 +141,7 @@
                                         </div>
                                     </div>
                                     
-                                    <small class="form-text text-muted">How much each day the system is charged / discharged</small>
+                                    <small class="form-text text-muted">How much each day the system is charged / discharged ? Not always you use the full capacity (not at home etc)</small>
                                 </div>
                             </div>
                         </div>
@@ -196,7 +217,7 @@
                                     <div class="mb-3">
                                         <label for="pvBuffering" class="form-label">Buffering needed (%)</label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control text-end" id="pvBuffering" value="80" step="1">
+                                            <input type="number" class="form-control text-end" id="pvBuffering" value="80" step="1" max="100" min="0">
                                             <span class="input-group-text">%</span>
                                         </div>
                                         <small class="form-text text-muted">How much energy is needed to be stored in the battery, so can be used later?</small>
@@ -293,6 +314,40 @@
                                 </div>
                             </div>
                         </div>
+                        <h5 class="mb-3"> Battery Calculations</h5>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="estimatedLifeRemaining" class="form-label">Estimated Life Remaining</label>
+                                    <div class="input-group">
+                                        <input readonly class="form-control text-end" id="estimatedLifeRemaining" readonly>
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="chargeDischargeCycles" class="form-label">Equivalent Cycles done</label>
+                                    <div class="input-group">
+                                        <input readonly class="form-control text-end" id="chargeDischargeCycles" readonly>
+                                        <span class="input-group-text"></span>
+                                    </div>
+                                    <small class="form-text text-muted">If used in conjunction with PV, you have 2 cicle per day, but they do not fully charge the battery, so the wear is reduced</small>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="costPerKWhStored" class="form-label">Cost per kWh stored</label>
+                                    <div class="input-group">
+                                        <input readonly class="form-control text-end" id="costPerKWhStored" readonly>
+                                        <span class="input-group-text">€</span>
+                                    </div>
+                                    <small class="form-text text-muted">As the life of the battery is limited, each kWh has an associated cost, this value is based on using the battery for the entire life cycle</small>
+                                </div>
+                            </div>
+                        </div>  
+
                         <h5 class="mb-3"> PV Calculations</h5>
                         <div class="row">
                             <div class="col-md-3">
@@ -363,26 +418,35 @@
     <!-- Bootstrap JS and dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+
+const allParams = {
+    inverterEfficiency: 0.93,
+    inverterPrice: 1000,
+    batteryEfficiency: 0.95,
+    batteryCapacity: 10,
+    batteryPrice: 2000,
+    wiringEfficiency: 0.99,
+    otherCost: 500,
+    nightCost: 0.14301,
+    dailyCost: 0.26378,
+    avgDailyProduction: 0,
+    pvPrice: 0,
+    pvBuffering: 0,
+    scenario: 1,
+    maxSOC: 90,
+    systemUsageFactor: 90,
+    advertiserLifeCycle: 5000
+}
+
 function populateFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
     
     // Map of parameter names to input field IDs
-    const paramMap = {
-        'inverterEfficiency': 'inverterEfficiency',
-        'inverterPrice': 'inverterPrice',
-        'batteryEfficiency': 'batteryEfficiency',
-        'batteryCapacity': 'batteryCapacity',
-        'batteryPrice': 'batteryPrice',
-        'wiringEfficiency': 'wiringEfficiency',
-        'otherCost': 'otherCost',
-        'systemUsageFactor': 'systemUsageFactor',
-        'nightCost': 'nightCost',
-        'dailyCost': 'dailyCost',
-        'avgDailyProduction': 'avgDailyProduction',
-        'pvPrice': 'pvPrice',
-        'pvBuffering': 'pvBuffering',
-        'scenario': 'scenario'
-    };
+    // Create map of parameters to input field IDs from allParams
+    const paramMap = {};
+    for (const param in allParams) {
+        paramMap[param] = param;
+    }
 
     // Populate fields if parameters exist
     for (const [param, elementId] of Object.entries(paramMap)) {
@@ -401,43 +465,24 @@ function populateFromURL() {
 document.addEventListener('DOMContentLoaded', populateFromURL);
 
 function calculate() {
-    // Get all the values first
-    inverterEfficiency = Number(document.getElementById("inverterEfficiency").value);
-    inverterPrice = Number(document.getElementById("inverterPrice").value);
-    batteryEfficiency = Number(document.getElementById("batteryEfficiency").value);
-    batteryCapacity = Number(document.getElementById("batteryCapacity").value);
-    batteryPrice = Number(document.getElementById("batteryPrice").value);
-    wiringEfficiency = Number(document.getElementById("wiringEfficiency").value);
-    otherCost = Number(document.getElementById("otherCost").value);
-    nightCost = Number(document.getElementById("nightCost").value);
-    dailyCost = Number(document.getElementById("dailyCost").value);
-    avgDailyProduction = Number(document.getElementById("avgDailyProduction").value);
-    pvPrice = Number(document.getElementById("pvPrice").value);
-    pvBuffering = Number(document.getElementById("pvBuffering").value);
-    scenario = document.getElementById("scenario").value;
+    // Create variables from form inputs for all parameters
+    let form = {};
+
+    for (const [param, defaultValue] of Object.entries(allParams)) {
+        form[param] = Number(document.getElementById(param).value) || defaultValue;
+    }
 
     // Update URL with current values
-    const params = new URLSearchParams({
-        inverterEfficiency,
-        inverterPrice,
-        batteryEfficiency,
-        batteryCapacity,
-        batteryPrice,
-        wiringEfficiency,
-        otherCost,
-        nightCost,
-        dailyCost,
-        avgDailyProduction,
-        pvPrice,
-        pvBuffering,
-        scenario
-    });
+    const params = new URLSearchParams();
+    for (const [param, value] of Object.entries(form)) {
+        params.append(param, value);
+    }
     
     const newUrl = `${window.location.pathname}?${params.toString()}`;
     window.history.pushState({}, '', newUrl);
 
     // Efficiency
-    singleTripEfficiency = inverterEfficiency * batteryEfficiency * wiringEfficiency;
+    singleTripEfficiency = form.inverterEfficiency * form.batteryEfficiency * form.wiringEfficiency;
     roundTripEfficiency = singleTripEfficiency * singleTripEfficiency;
 
     singleTripEfficiency = Number(singleTripEfficiency.toFixed(3));
@@ -446,30 +491,31 @@ function calculate() {
     document.getElementById("singleTripEfficiency").value = singleTripEfficiency;
     document.getElementById("roundTripEfficiency").value = roundTripEfficiency;
 
+    let actualBatteryCapacity = form.batteryCapacity * (form.maxSOC / 100) * (form.systemUsageFactor / 100);
     // Energy stored in the battery
-    energyToLoad = batteryCapacity / singleTripEfficiency;
+    energyToLoad = actualBatteryCapacity / singleTripEfficiency;
     document.getElementById("energyToLoad").value = (energyToLoad).toFixed(3);
 
-    costToLoad = (energyToLoad) * nightCost;
+    costToLoad = (energyToLoad) * form.nightCost;
     document.getElementById("costToLoad").value = costToLoad.toFixed(2);
 
     // Usable energy
-    usableEnergy = batteryCapacity * singleTripEfficiency;
+    usableEnergy = actualBatteryCapacity * singleTripEfficiency;
     document.getElementById("usableEnergy").value = (usableEnergy).toFixed(3);
 
     // Cost of the usable energy
-    valueUsableEnergy = (usableEnergy) * dailyCost;
+    valueUsableEnergy = (usableEnergy) * form.dailyCost;
     document.getElementById("valueUsableEnergy").value = valueUsableEnergy.toFixed(2);
 
     // Buffered energy
-    bufferedEnergy = Math.min(avgDailyProduction * (pvBuffering / 100) * singleTripEfficiency, batteryCapacity);
+    bufferedEnergy = Math.min(form.avgDailyProduction * (form.pvBuffering / 100) * singleTripEfficiency, actualBatteryCapacity);
     document.getElementById("bufferedEnergy").value = bufferedEnergy.toFixed(3);
 
     usableBufferedEnergy = bufferedEnergy * singleTripEfficiency;
     document.getElementById("usableBufferedEnergy").value = usableBufferedEnergy.toFixed(3);
 
         // Buffered energy value
-    bufferedEnergyValue = usableBufferedEnergy * dailyCost;
+    bufferedEnergyValue = usableBufferedEnergy * form.dailyCost;
     document.getElementById("bufferedEnergyValue").value = bufferedEnergyValue.toFixed(2);
 
     // Daily saving
@@ -478,7 +524,7 @@ function calculate() {
     document.getElementById("dailySaving").value = dailySaving.toFixed(2);
 
     // ROI
-    totalSystemCost = inverterPrice + batteryPrice + otherCost + pvPrice;
+    totalSystemCost = form.inverterPrice + form.batteryPrice + form.otherCost + form.pvPrice;
     document.getElementById("totalSystemCost").value = totalSystemCost.toFixed(2);
     daysToPay = Math.floor(totalSystemCost / (dailySaving));
 
@@ -489,6 +535,27 @@ function calculate() {
     roiDays = Math.floor(remainingDays % 30);
     document.getElementById("roiMonths").value = roiYears + " years " + roiMonths + " months " + roiDays + " days";
     document.getElementById("roiDays").value = daysToPay + " days";
+
+
+    // Estimate life cycle left
+    //equivalent cicle used for the days of night process
+    let cicleUsed4DN = daysToPay / getLifeCycleMultiplier(form.maxSOC * form.systemUsageFactor / 100); 
+    //equivalent cicle used for the PV storage
+    let bufferedCapacity = bufferedEnergy / actualBatteryCapacity;
+    let cicleUsed4PV = daysToPay / getLifeCycleMultiplier(form.maxSOC * form.systemUsageFactor / 100 * bufferedCapacity ) ; 
+
+    //equivalent cicle used for the days of night process
+    let lifeCycleUsed = cicleUsed4DN + cicleUsed4PV;
+    document.getElementById("chargeDischargeCycles").value = lifeCycleUsed.toFixed(0);
+
+    let lifeUsed = lifeCycleUsed / form.advertiserLifeCycle;
+    let lifeRemaining = 1 - lifeUsed;
+    document.getElementById("estimatedLifeRemaining").value = (lifeRemaining * 100).toFixed(2);
+
+    // Cost per kWh stored
+    let kwStored = (usableEnergy * daysToPay) + (usableBufferedEnergy * daysToPay);
+    let costPerKWhStored = (form.batteryPrice / kwStored ) * lifeUsed;
+    document.getElementById("costPerKWhStored").value = costPerKWhStored.toFixed(2);
 }
 
 
@@ -511,6 +578,7 @@ function changeScenario() {
             document.getElementById("avgDailyProduction").value = 0;
             document.getElementById("pvPrice").value = 0;
             document.getElementById("pvBuffering").value = 0;
+            document.getElementById("maxSOC").value = 90;
             break;
         case "2":
             // Battery + PV 1
@@ -526,6 +594,7 @@ function changeScenario() {
             document.getElementById("avgDailyProduction").value = 10;
             document.getElementById("pvPrice").value = 0;
             document.getElementById("pvBuffering").value = 50;
+            document.getElementById("maxSOC").value = 90;
             break;
         case "3":
             // Battery + PV 2
@@ -541,10 +610,49 @@ function changeScenario() {
             document.getElementById("avgDailyProduction").value = 10;
             document.getElementById("pvPrice").value = 0;
             document.getElementById("pvBuffering").value = 100;
+            document.getElementById("maxSOC").value = 90;
             break;
     }
 }
 
+function lerp(x, x1, x2, y1, y2) {
+    // Linear interpolation formula: y = y1 + (x - x1) * (y2 - y1) / (x2 - x1)
+    return y1 + (x - x1) * (y2 - y1) / (x2 - x1);
+}
+
+function getLifeCycleMultiplier(maxSOC) {
+    // Define our key points on the curve
+    // [SOC, multiplier]
+    const points = [
+        [70, 3.0],  // 200% increase (3x)
+        [90, 1.5],  // 50% increase (1.5x)
+        [100, 1.0]  // No increase (1x) at 100%
+    ];
+
+    // Clamp maxSOC between 0 and 100
+    maxSOC = Math.max(0, Math.min(100, maxSOC));
+
+    // If maxSOC is less than or equal to first point, return maximum multiplier
+    if (maxSOC <= points[0][0]) {
+        return points[0][1];
+    }
+
+    // Find the appropriate segment and interpolate
+    for (let i = 0; i < points.length - 1; i++) {
+        if (maxSOC <= points[i + 1][0]) {
+            return lerp(
+                maxSOC,
+                points[i][0],
+                points[i + 1][0],
+                points[i][1],
+                points[i + 1][1]
+            );
+        }
+    }
+
+    // If maxSOC is greater than last point, return minimum multiplier
+    return points[points.length - 1][1];
+}
 
 
     </script>
