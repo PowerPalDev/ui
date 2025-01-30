@@ -542,7 +542,9 @@ function calculate() {
     let cicleUsed4DN = daysToPay / getLifeCycleMultiplier(form.maxSOC * form.systemUsageFactor / 100); 
     //equivalent cicle used for the PV storage
     let bufferedCapacity = bufferedEnergy / actualBatteryCapacity;
-    let cicleUsed4PV = daysToPay / getLifeCycleMultiplier(form.maxSOC * form.systemUsageFactor / 100 * bufferedCapacity ) ; 
+    let life4Pv = getLifeCycleMultiplier(form.maxSOC * form.systemUsageFactor / 100 * bufferedCapacity ) ;
+    let life4PvUsed = life4Pv * bufferedCapacity;
+    let cicleUsed4PV = daysToPay * life4PvUsed;
 
     //equivalent cicle used for the days of night process
     let lifeCycleUsed = cicleUsed4DN + cicleUsed4PV;
