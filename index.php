@@ -7,6 +7,14 @@
     <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        :root {
+            /* Configure panel widths here */
+            --panel-width-desktop: 600px;      /* Panel width on desktop */
+            --panel-width-tablet: 250px;       /* Panel width on tablet */
+            --panel-overlay-percentage: 100%;    /* How much panel covers on mobile (in %) */
+            --panel-animation-speed: 0.3s;     /* Panel slide animation speed */
+        }
+
         /* Custom styles */
         @media (min-width: 768px) {
             #sidebar {
@@ -21,12 +29,12 @@
             /* Right panel transition */
             #right-panel {
                 height: 100vh;
-                position: sticky;
-                top: 0;
-                transition: transform 0.3s ease-in-out;
-                transform: translateX(100%);
+                width: var(--panel-width-desktop);
                 position: fixed;
+                top: 0;
                 right: 0;
+                transition: transform var(--panel-animation-speed) ease-in-out;
+                transform: translateX(100%);
                 background: white;
                 box-shadow: -2px 0 5px rgba(0,0,0,0.1);
                 z-index: 1000;
@@ -38,11 +46,21 @@
 
             /* Adjust main content when panel is shown */
             main {
-                transition: padding-right 0.3s ease-in-out;
+                transition: padding-right var(--panel-animation-speed) ease-in-out;
             }
 
             main.panel-visible {
-                padding-right: 25%; /* Adjust based on panel width */
+                padding-right: var(--panel-width-desktop); /* Matches panel width */
+            }
+        }
+
+        /* Tablet specific adjustments */
+        @media (min-width: 768px) and (max-width: 991.98px) {
+            #right-panel {
+                width: var(--panel-width-tablet);
+            }
+            main.panel-visible {
+                padding-right: var(--panel-width-tablet);
             }
         }
         
@@ -64,9 +82,9 @@
                 top: 0;
                 right: 0;
                 bottom: 60px; /* Account for bottom nav */
-                width: 100%;
+                width: var(--panel-overlay-percentage);
                 transform: translateX(100%);
-                transition: transform 0.3s ease-in-out;
+                transition: transform var(--panel-animation-speed) ease-in-out;
                 background: white;
                 z-index: 999;
             }
@@ -93,9 +111,33 @@
             cursor: pointer;
             padding: 5px;
         }
+
+        /* Optional: Add backdrop when panel is shown on mobile */
+        .panel-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            opacity: 0;
+            transition: opacity var(--panel-animation-speed) ease-in-out;
+        }
+
+        @media (max-width: 767.98px) {
+            .panel-backdrop.show {
+                display: block;
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Add backdrop div -->
+    <div class="panel-backdrop"></div>
+    
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar for desktop -->
