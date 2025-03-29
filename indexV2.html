@@ -222,6 +222,33 @@
 .sectionTitle{
     color: white;
 }
+
+.green-icon{
+    color: #088f51;
+}
+
+.red-icon{
+    color: red;
+}
+
+.power-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: white;
+    border: 6px solid #0d6efd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+}
+
+.power-button i {
+    color: #333;
+    font-size: 16px;
+}
+
     </style>
 </head>
 <body>
@@ -252,15 +279,24 @@
                     <div class="col-12 col-md card-container">
                         <div class="card" id="card-1">
                             <div class="card-body">
-                                <h5 class="card-title">Card Title</h5>
-                                <p class="card-text">Click this card to see more information in the right panel.</p>
+                                <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo" height="40">
+                                <span class="card-title p25">Device Name</span> <i class="fa-solid fa-cloud-arrow-up green-icon"></i>
+                                <div class="metric"> 
+                                    3.1 W <i class="fa-solid fa-bolt"></i> 231.5 V
+                                </div>
+                                <div class="right">
+                                    <button class="power-button">
+                                        <i class="fa fa-power-off"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md card-container">
                         <div class="card" id="card-1">
                             <div class="card-body">
-                                <h5 class="card-title">Card Title</h5>
+                                <span class="card-title p25">Device Name</span>  <i class="fa-solid fa-link-slash red-icon"></i> (offline 1:45)
+                                
                                 <p class="card-text">Click this card to see more information in the right panel.</p>
                             </div>
                         </div>
