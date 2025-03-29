@@ -335,7 +335,7 @@
                     </div>
 
                     <div class="col-12 col-md card-container">
-                        <div class="card" id="card-1">
+                        <div class="card" id="card-2">
                             <div class="card-body device-card">
                                 <div class="device-image">
                                     <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo">
@@ -355,7 +355,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md card-container">
-                        <div class="card" id="card-1">
+                        <div class="card" id="card-3">
                             <div class="card-body device-card">
                                 <div class="device-image">
                                     <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo">
@@ -371,7 +371,7 @@
                     </div>
 
                     <div class="col-12 col-md card-container">
-                        <div class="card" id="card-1">
+                        <div class="card" id="card-4">
                             <div class="card-body device-card">
                                 <div class="device-image">
                                     <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo">
@@ -447,6 +447,33 @@
                 if (!isClickInside && rightPanel.classList.contains('show')) {
                     togglePanel();
                 }
+            });
+
+            // Add power button functionality
+            const powerButtons = document.querySelectorAll('.power-button');
+            
+            powerButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Prevent card click event
+                    
+                    const icon = button.querySelector('i');
+                    
+                    if (button.classList.contains('green-border')) {
+                        // Change from green to grey
+                        button.classList.remove('green-border');
+                        button.classList.add('grey-border');
+                        icon.classList.remove('green-icon');
+                        icon.classList.add('grey-icon');
+                    } else if (button.classList.contains('grey-border')) {
+                        // Change from grey to blue
+                        button.classList.remove('grey-border');
+                        icon.classList.remove('grey-icon');
+                    } else if (!button.classList.contains('grey-border') && !button.classList.contains('green-border')) {
+                        // Change from blue to grey
+                        button.classList.add('grey-border');
+                        icon.classList.add('grey-icon');
+                    }
+                });
             });
         });
     </script>
