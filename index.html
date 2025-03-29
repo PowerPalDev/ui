@@ -54,16 +54,7 @@
             }
         }
 
-        /* Tablet specific adjustments */
-        @media (min-width: 768px) and (max-width: 991.98px) {
-            #right-panel {
-                width: var(--panel-width-tablet);
-            }
-            main.panel-visible {
-                padding-right: var(--panel-width-tablet);
-            }
-        }
-        
+
         @media (max-width: 767.98px) {
             #sidebar {
                 display: none;
@@ -94,15 +85,22 @@
         }
 
         /* Card container styles */
-        .card-container {
-            width: 100%;
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 0.75rem;
         }
         
-        @media (min-width: 768px) {
-            .card-container {
-                max-width: 350px;
-                width: auto;
+        @media (max-width: 767.98px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
             }
+        }
+
+        .card-container {
+            width: 100%;
+            max-width: 450px;
+            margin: 0 auto;
         }
         
         /* Update card hover effect for new structure */
@@ -153,7 +151,7 @@
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar for desktop -->
-            <div id="sidebar" class="col-md-3 col-lg-2 bg-light p-3">
+            <div id="sidebar" class="col-md-auto bg-light p-3" style="max-width: 120px;">
                 <h3>Sidebar</h3>
                 <ul class="nav flex-column">
                     <li class="nav-item">
@@ -172,11 +170,35 @@
             </div>
 
             <!-- Main content area -->
-            <main class="col-md-9 col-lg-10 p-4">
+            <main class="col p-4">
                 <h1>Main Content Area</h1>
                 <p>This is your main content. It will take up the middle section of the page.</p>
-                <div class="row g-4">
-                    <div class="col-12 col-auto card-container">
+                <div class="row g-2 cards-grid">
+                    <div class="col-12 col-md card-container">
+                        <div class="card" id="card-1">
+                            <div class="card-body">
+                                <h5 class="card-title">Card Title</h5>
+                                <p class="card-text">Click this card to see more information in the right panel.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md card-container">
+                        <div class="card" id="card-1">
+                            <div class="card-body">
+                                <h5 class="card-title">Card Title</h5>
+                                <p class="card-text">Click this card to see more information in the right panel.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md card-container">
+                        <div class="card" id="card-1">
+                            <div class="card-body">
+                                <h5 class="card-title">Card Title</h5>
+                                <p class="card-text">Click this card to see more information in the right panel.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md card-container">
                         <div class="card" id="card-1">
                             <div class="card-body">
                                 <h5 class="card-title">Card Title</h5>
