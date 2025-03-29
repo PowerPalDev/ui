@@ -127,7 +127,7 @@
             background-color: var(--background-image-overlay-blur);
             -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
-            margin-top: 15px;
+            margin-top: 1.5rem;
         }
 
         .nav-container a:first-child{
@@ -219,6 +219,9 @@
     font-size: 25px;
 }
 
+.sectionTitle{
+    color: white;
+}
     </style>
 </head>
 <body>
@@ -233,7 +236,7 @@
             </div>
             <!-- Sidebar for desktop -->
             <div id="sidebar" class="no-gutter nav-container" style="max-width: 120px;">
-                <a class="nav-link active" href="#"> <i class="p25 fa-solid fa-house"></i><br>My home</a>
+                <a class="nav-link active" href="#"> <i class="p25 fa-solid fa-tachometer-alt-fast"></i><br>Devices</a>
 
                 <a class="nav-link" href="#"> <i class="p25 fa-solid fa-bolt"></i><br>Energy</a>
 
@@ -244,8 +247,7 @@
 
             <!-- Main content area -->
             <main class="col p-4">
-                <h1>Main Content Area</h1>
-                <p>This is your main content. It will take up the middle section of the page.</p>
+                <h1 class="sectionTitle mb-4">Devices</h1>
                 <div class="row g-2 cards-grid">
                     <div class="col-12 col-md card-container">
                         <div class="card" id="card-1">
