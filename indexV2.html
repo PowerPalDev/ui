@@ -224,7 +224,7 @@
 }
 
 .green-icon{
-    color: #088f51;
+    color: #088f51 !important;
 }
 
 .red-icon{
@@ -232,21 +232,58 @@
 }
 
 .power-button {
-    width: 40px;
-    height: 40px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
     background-color: white;
-    border: 6px solid #0d6efd;
+    border: 8px solid #2491ff;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     padding: 0;
+    box-shadow: 0 0px 8px rgba(0, 0, 0, 0.5);
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+.green-border {
+    border: 8px solid #088f51;
+}
+
+.grey-border {
+    border: 8px solid #808080;
+}
+
+.grey-icon {
+    color: #808080 !important;
 }
 
 .power-button i {
-    color: #333;
-    font-size: 16px;
+    color: #2491ff;
+    font-size: 24px;
+}
+
+.device-card {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1rem;
+    align-items: center;
+}
+
+.device-image img {
+    height: 100%;
+    width: auto;
+    max-height: 60px;
+}
+
+.device-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.right {
+    justify-self: end;
 }
 
     </style>
@@ -278,11 +315,15 @@
                 <div class="row g-2 cards-grid">
                     <div class="col-12 col-md card-container">
                         <div class="card" id="card-1">
-                            <div class="card-body">
-                                <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo" height="40">
-                                <span class="card-title p25">Device Name</span> <i class="fa-solid fa-cloud-arrow-up green-icon"></i>
-                                <div class="metric"> 
-                                    3.1 W <i class="fa-solid fa-bolt"></i> 231.5 V
+                            <div class="card-body device-card">
+                                <div class="device-image">
+                                    <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo">
+                                </div>
+                                <div class="device-info">
+                                    <span class="card-title p25">Device Name</span> 
+                                    <div class="metric"> 
+                                        3.1 W <i class="fa-solid fa-bolt"></i> 231.5 V
+                                    </div>
                                 </div>
                                 <div class="right">
                                     <button class="power-button">
@@ -292,31 +333,64 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="col-12 col-md card-container">
                         <div class="card" id="card-1">
-                            <div class="card-body">
-                                <span class="card-title p25">Device Name</span>  <i class="fa-solid fa-link-slash red-icon"></i> (offline 1:45)
-                                
-                                <p class="card-text">Click this card to see more information in the right panel.</p>
+                            <div class="card-body device-card">
+                                <div class="device-image">
+                                    <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo">
+                                </div>
+                                <div class="device-info">
+                                    <span class="card-title p25">Device Name</span> 
+                                    <div class="metric"> 
+                                        3.1 W <i class="fa-solid fa-bolt"></i> 231.5 V
+                                    </div>
+                                </div>
+                                <div class="right">
+                                    <button class="power-button green-border">
+                                        <i class="fa fa-power-off green-icon"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md card-container">
                         <div class="card" id="card-1">
-                            <div class="card-body">
-                                <h5 class="card-title">Card Title</h5>
-                                <p class="card-text">Click this card to see more information in the right panel.</p>
+                            <div class="card-body device-card">
+                                <div class="device-image">
+                                    <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo">
+                                </div>
+                                <div class="device-info">
+                                    <span class="card-title p25">Device Name</span> 
+                                    <div class="metric"> 
+                                        <i class="fa-solid fa-link-slash red-icon"></i> offline 1:45
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
+
                     <div class="col-12 col-md card-container">
                         <div class="card" id="card-1">
-                            <div class="card-body">
-                                <h5 class="card-title">Card Title</h5>
-                                <p class="card-text">Click this card to see more information in the right panel.</p>
+                            <div class="card-body device-card">
+                                <div class="device-image">
+                                    <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo">
+                                </div>
+                                <div class="device-info">
+                                    <span class="card-title p25">Device Name</span> 
+                                    <div class="metric"> 
+                                        3.1 W <i class="fa-solid fa-bolt"></i> 231.5 V
+                                    </div>
+                                </div>
+                                <div class="right">
+                                    <button class="power-button grey-border">
+                                        <i class="fa fa-power-off grey-icon"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
                 <!-- Add your main content here -->
             </main>
