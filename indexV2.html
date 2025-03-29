@@ -193,26 +193,33 @@
             cursor: pointer;
             transition: transform 0.2s;
             background-color: #303235; /* Dark grey background */
-
+            border-radius: 18px;
         }
 
-        .card-body {
+        .card-body2 {
+        flex: 1 1 auto;
+            padding: 6px;
             color: white; /* White text for all content */
         }
 
         .metric {
-            background-color: #242527; /* Slightly lighter grey for metric container */
+            background-color: #242527;
             padding: 8px 12px;
-            border-radius: 8px;
+            border-radius: 18px;
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            width: fit-content;
+            white-space: nowrap;
+            font-size: 16px;
+            margin-top: -5px;
         }
 
         /* Ensure device name is white */
-        .card-title.p25 {
+        .card-title{
             color: white;
             margin-bottom: 0;
+            font-weight: 600;
         }
 
         /* Optional: adjust icon colors in metric to be more visible */
@@ -260,6 +267,14 @@
     margin-right: 0 !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
+}
+
+.p12{
+    font-size: 12px;
+}
+
+.p18{
+    font-size: 18px;
 }
 
 .p25{
@@ -362,12 +377,12 @@
                 <div class="row g-2 cards-grid">
                     <div class="col-12 col-md card-container">
                         <div class="card" id="card-1">
-                            <div class="card-body device-card">
+                            <div class="card-body2 device-card">
                                 <div class="device-image">
                                     <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo">
                                 </div>
                                 <div class="device-info">
-                                    <span class="card-title p25">Device Name</span> 
+                                    <span class="card-title">Device Name</span> 
                                     <div class="metric"> 
                                         3.1 W <i class="fa-solid fa-bolt"></i> 231.5 V
                                     </div>
@@ -383,12 +398,12 @@
 
                     <div class="col-12 col-md card-container">
                         <div class="card" id="card-2">
-                            <div class="card-body device-card">
+                            <div class="card-body2 device-card">
                                 <div class="device-image">
                                     <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo">
                                 </div>
                                 <div class="device-info">
-                                    <span class="card-title p25">Device Name</span> 
+                                    <span class="card-title">Device Name</span> 
                                     <div class="metric"> 
                                         3.1 W <i class="fa-solid fa-bolt"></i> 231.5 V
                                     </div>
@@ -403,12 +418,12 @@
                     </div>
                     <div class="col-12 col-md card-container">
                         <div class="card" id="card-3">
-                            <div class="card-body device-card">
+                            <div class="card-body2 device-card">
                                 <div class="device-image">
                                     <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo">
                                 </div>
                                 <div class="device-info">
-                                    <span class="card-title p25">Device Name</span> 
+                                    <span class="card-title">Device Name</span> 
                                     <div class="metric"> 
                                         <i class="fa-solid fa-link-slash red-icon"></i> offline 1:45
                                     </div>
@@ -419,12 +434,12 @@
 
                     <div class="col-12 col-md card-container">
                         <div class="card" id="card-4">
-                            <div class="card-body device-card">
+                            <div class="card-body2 device-card">
                                 <div class="device-image">
                                     <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo">
                                 </div>
                                 <div class="device-info">
-                                    <span class="card-title p25">Device Name</span> 
+                                    <span class="card-title">Device Name</span> 
                                     <div class="metric"> 
                                         3.1 W <i class="fa-solid fa-bolt"></i> 231.5 V
                                     </div>
