@@ -102,6 +102,27 @@
                 width: 100%;
                 z-index: 1000;
             }
+            #bottom-nav .nav-container {
+                border-top-right-radius: 10px;
+                border-top-left-radius: 10px;
+                width: 100%;
+                padding: 0;
+            }
+            #bottom-nav .nav-link {
+                height: 60px;
+                color: var(--color-green-faint) !important;
+                font-size: 14px;
+                border-left: 0.7px solid var(--color-green-light);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                padding: 0;
+            }
+            #bottom-nav .nav-link:first-child {
+                border-left: none;
+            }
             body {
                 padding-bottom: 60px; /* Space for bottom nav */
             }
@@ -171,6 +192,32 @@
         .card {
             cursor: pointer;
             transition: transform 0.2s;
+            background-color: #303235; /* Dark grey background */
+
+        }
+
+        .card-body {
+            color: white; /* White text for all content */
+        }
+
+        .metric {
+            background-color: #242527; /* Slightly lighter grey for metric container */
+            padding: 8px 12px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Ensure device name is white */
+        .card-title.p25 {
+            color: white;
+            margin-bottom: 0;
+        }
+
+        /* Optional: adjust icon colors in metric to be more visible */
+        .metric i.fa-bolt {
+            color: #ffffff;
         }
 
         .card:hover {
@@ -410,12 +457,12 @@
     </div>
 
     <!-- Bottom navigation for mobile -->
-    <nav id="bottom-nav" class="navbar navbar-expand navbar-light bg-light">
-        <div class="container-fluid justify-content-around nav-container">
-            <a class="nav-link active" href="#"><i class="bi bi-house"></i><br>Home</a>
-            <a class="nav-link" href="#"><i class="bi bi-speedometer2"></i><br>Dashboard</a>
-            <a class="nav-link" href="#"><i class="bi bi-file-text"></i><br>Reports</a>
-            <a class="nav-link" href="#"><i class="bi bi-gear"></i><br>Settings</a>
+    <nav id="bottom-nav" class="navbar navbar-expand navbar-light">
+        <div class="container-fluid justify-content-around nav-container" style="background-color: var(--background-image-overlay-blur); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border: 0.7px solid var(--color-green-light);">
+            <a class="nav-link active" style="width: 25%;"><i class="p25 fa-solid fa-tachometer-alt-fast"></i><br>Devices</a>
+            <a class="nav-link" style="width: 25%;"><i class="p25 fa-solid fa-bolt"></i><br>Energy</a>
+            <a class="nav-link" style="width: 25%;"><i class="p25 fa-solid fa-gear"></i><br>Settings</a>
+            <a class="nav-link" style="width: 25%;"><i class="p25 fa-solid fa-circle-question"></i><br>Support</a>
         </div>
     </nav>
 
