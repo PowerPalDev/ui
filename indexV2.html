@@ -73,24 +73,6 @@
                 background: white;
                 box-shadow: -2px 0 5px rgba(0,0,0,0.1);
                 z-index: 1000;
-                /* Remove transform and transition for desktop */
-                transform: none;
-                transition: none;
-            }
-
-            /* Remove show class effects for desktop */
-            #right-panel.show {
-                transform: none;
-            }
-
-            /* Adjust main content to account for always-visible panel */
-            main {
-                padding-right: calc(var(--panel-width-desktop) + 1.5rem) !important;
-                transition: none;
-            }
-
-            main.panel-visible {
-                padding-right: calc(var(--panel-width-desktop) + 1.5rem) !important;
             }
         }
 
