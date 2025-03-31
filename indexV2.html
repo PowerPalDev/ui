@@ -51,6 +51,13 @@
             }
         }
 
+        #right-panel{
+            background-color: #242527   ;
+            border-style: solid;
+            border-color: rgb(107, 107, 107);
+            border-width: 1px;
+        }
+
         /* Custom styles */
         @media (min-width: 1024px) {
             /* ... other desktop styles ... */
@@ -81,12 +88,11 @@
                 grid-column: 3;
                 width: var(--panel-width-desktop);
                 min-width: var(--panel-width-desktop);
-                background: white;
                 box-shadow: -2px 0 5px rgba(0,0,0,0.1);
                 transform: none;
                 transition: none;
-                border-top-right-radius: 18px;
-                border-bottom-right-radius: 18px;
+                border-top-left-radius: 18px;
+                border-bottom-left-radius: 18px;
             }
 
             #bottom-nav {
@@ -140,8 +146,9 @@
                 width: var(--panel-width-desktop);
                 transform: translateX(100%);
                 transition: transform var(--panel-animation-speed) ease-in-out;
-                background: white;
                 z-index: 999;
+                border-top-left-radius: 18px;
+                border-bottom-left-radius: 18px;
             }
             #right-panel.show {
                 transform: translateX(0);
@@ -464,13 +471,20 @@
             </main>
 
             <!-- Right info panel -->
-            <div id="right-panel" class="col-md-3 col-lg-2 p-3">
-                <button type="button" class="btn-close panel-close" aria-label="Close"></button>
-                <h3>Info Panel</h3>
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">Information</h5>
-                        <p class="card-text">Additional information can be displayed here.</p>
+            <div id="right-panel" class="col-md-3 col-lg-2 p-0">
+                <div style="height: 32px; background-color: #242527; position: relative; border-top-left-radius: 18px;">
+                    <button type="button" class="panel-close" aria-label="Close" 
+                    style="font-size: 26px; position: absolute; right: 10px; top: 5px; background: none; border: none; color: silver;">
+                        <i class="fa-solid fa-times"></i>
+                    </button>
+                </div>
+                <div class="p-3">
+                    <h3>Info Panel</h3>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Information</h5>
+                            <p class="card-text">Additional information can be displayed here.</p>
+                        </div>
                     </div>
                 </div>
             </div>
