@@ -326,12 +326,34 @@
     transition: box-shadow 0.2s ease-in-out;
 }
 
+.blue-border {
+    border: 8px solid #2491ff;
+    box-shadow: 0 0 15px rgba(36, 145, 255, 0.4),
+                0 0 30px rgba(36, 145, 255, 0.2); /* Double shadow for stronger effect */
+}
+
+.blue-icon {
+    color: #2491ff !important;
+}
+
 .green-border {
     border: 8px solid #088f51;
+    box-shadow: 0 0 15px rgba(8, 143, 81, 0.4),
+                0 0 30px rgba(8, 143, 81, 0.2); /* Double shadow for stronger effect */
 }
 
 .grey-border {
     border: 8px solid #808080;
+}
+
+.violet-border {
+    border: 8px solid #800080;
+    box-shadow: 0 0 15px rgba(128, 0, 128, 0.4),
+    0 0 30px rgba(128, 0, 128, 0.2); /* Double shadow for stronger effect */
+}
+
+.violet-icon {
+    color: #800080 !important;
 }
 
 .grey-icon {
@@ -339,7 +361,6 @@
 }
 
 .power-button i {
-    color: #2491ff;
     font-size: 24px;
 }
 
@@ -406,8 +427,8 @@
                                     </div>
                                 </div>
                                 <div class="right">
-                                    <button class="power-button">
-                                        <i class="fa fa-power-off"></i>
+                                    <button class="power-button blue-border">
+                                        <i class="fa fa-power-off blue-icon"></i>
                                     </button>
                                 </div>
                             </div>
@@ -465,6 +486,27 @@
                                 <div class="right">
                                     <button class="power-button grey-border">
                                         <i class="fa fa-power-off grey-icon"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md card-container">
+                        <div class="card" id="card-5">
+                            <div class="card-body2 device-card">
+                                <div class="device-image">
+                                    <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo">
+                                </div>
+                                <div class="device-info">
+                                    <span class="card-title">Device Name</span> 
+                                    <div class="metric"> 
+                                        2.4 kW <i class="fa-solid fa-bolt"></i> 231.5 V
+                                    </div>
+                                </div>
+                                <div class="right">
+                                    <button class="power-button violet-border">
+                                        <i class="fa fa-power-off violet-icon"></i>
                                     </button>
                                 </div>
                             </div>
@@ -551,12 +593,22 @@
                         button.classList.add('grey-border');
                         icon.classList.remove('green-icon');
                         icon.classList.add('grey-icon');
+                    } else if (button.classList.contains('blue-border')) {
+                        button.classList.remove('blue-border');
+                        button.classList.add('grey-border');
+                        icon.classList.remove('blue-icon');
+                        icon.classList.add('grey-icon');
+                    } else if (button.classList.contains('violet-border')) {
+                        button.classList.remove('violet-border');
+                        button.classList.add('grey-border');
+                        icon.classList.remove('violet-icon');
+                        icon.classList.add('grey-icon');
                     } else if (button.classList.contains('grey-border')) {
-                        // Change from grey to blue
                         button.classList.remove('grey-border');
                         icon.classList.remove('grey-icon');
-                    } else if (!button.classList.contains('grey-border') && !button.classList.contains('green-border')) {
-                        // Change from blue to grey
+                        button.classList.add('blue-border');
+                        icon.classList.add('blue-icon');
+                    } else {
                         button.classList.add('grey-border');
                         icon.classList.add('grey-icon');
                     }
