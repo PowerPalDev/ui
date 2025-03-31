@@ -14,7 +14,6 @@
         :root {
             /* Configure panel widths here */
             --panel-width-desktop: 300px;      /* Panel width on desktop */
-            --panel-width-tablet: 250px;       /* Panel width on tablet */
             --panel-overlay-percentage: 100%;    /* How much panel covers on mobile (in %) */
             --panel-animation-speed: 0.3s;     /* Panel slide animation speed */
 
@@ -87,6 +86,10 @@
                 transform: none;
                 transition: none;
             }
+
+            #bottom-nav {
+                display: none; /* Hide bottom nav in desktop mode */
+            }
         }
 
 
@@ -99,6 +102,7 @@
                 bottom: 0;
                 width: 100%;
                 z-index: 1000;
+                display: block; /* Ensure it's visible in mobile mode */
             }
             #bottom-nav .nav-container {
                 border-top-right-radius: 10px;
@@ -129,7 +133,8 @@
                 top: 0;
                 right: 0;
                 bottom: 60px; /* Account for bottom nav */
-                width: var(--panel-overlay-percentage);
+                max-width: (var(--panel-width-desktop));
+                width: var(--panel-width-desktop);
                 transform: translateX(100%);
                 transition: transform var(--panel-animation-speed) ease-in-out;
                 background: white;
