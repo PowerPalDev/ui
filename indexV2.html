@@ -13,7 +13,7 @@
     <style>
         :root {
             /* Configure panel widths here */
-            --panel-width-desktop: 600px;      /* Panel width on desktop */
+            --panel-width-desktop: 300px;      /* Panel width on desktop */
             --panel-width-tablet: 250px;       /* Panel width on tablet */
             --panel-overlay-percentage: 100%;    /* How much panel covers on mobile (in %) */
             --panel-animation-speed: 0.3s;     /* Panel slide animation speed */
@@ -53,7 +53,7 @@
         }
 
         /* Custom styles */
-        @media (min-width: 768px) {
+        @media (min-width: 1024px) {
             #sidebar {
                 height: 100vh;
                 position: sticky;
@@ -70,29 +70,32 @@
                 position: fixed;
                 top: 0;
                 right: 0;
-                transition: transform var(--panel-animation-speed) ease-in-out;
-                transform: translateX(100%);
                 background: white;
                 box-shadow: -2px 0 5px rgba(0,0,0,0.1);
                 z-index: 1000;
+                /* Remove transform and transition for desktop */
+                transform: none;
+                transition: none;
             }
 
+            /* Remove show class effects for desktop */
             #right-panel.show {
-                transform: translateX(0);
+                transform: none;
             }
 
-            /* Adjust main content when panel is shown */
+            /* Adjust main content to account for always-visible panel */
             main {
-                transition: padding-right var(--panel-animation-speed) ease-in-out;
+                padding-right: calc(var(--panel-width-desktop) + 1.5rem) !important;
+                transition: none;
             }
 
             main.panel-visible {
-                padding-right: var(--panel-width-desktop); /* Matches panel width */
+                padding-right: calc(var(--panel-width-desktop) + 1.5rem) !important;
             }
         }
 
 
-        @media (max-width: 767.98px) {
+        @media (max-width: 1023.98px) {
             #sidebar {
                 display: none;
             }
