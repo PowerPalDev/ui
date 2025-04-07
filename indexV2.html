@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,23 +9,27 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
     <style>
         :root {
             /* Configure panel widths here */
-            --panel-width-desktop: 300px;      /* Panel width on desktop */
-            --panel-overlay-percentage: 100%;    /* How much panel covers on mobile (in %) */
-            --panel-animation-speed: 0.3s;     /* Panel slide animation speed */
+            --panel-width-desktop: 300px;
+            /* Panel width on desktop */
+            --panel-overlay-percentage: 100%;
+            /* How much panel covers on mobile (in %) */
+            --panel-animation-speed: 0.3s;
+            /* Panel slide animation speed */
 
             --color-primary: #088f51;
             --color-green-light: #576f64;
             --color-green-faint: #eaf2ee;
             --color-3: #088f51;
             --radius-small: 8px;
-            --background-image-overlay:rgba(0, 0, 0, .7);
-            --background-image-overlay-blur:rgba(51, 62, 54, 0.3);
-    
+            --background-image-overlay: rgba(0, 0, 0, .7);
+            --background-image-overlay-blur: rgba(51, 62, 54, 0.3);
+
 
         }
 
@@ -40,6 +45,7 @@
             background-repeat: no-repeat;
             z-index: -1;
             filter: blur(1px);
+
             &::after {
                 content: "";
                 position: absolute;
@@ -51,8 +57,8 @@
             }
         }
 
-        #right-panel{
-            background-color: #242527   ;
+        #right-panel {
+            background-color: #242527;
             border-style: solid;
             border-color: rgb(107, 107, 107);
             border-width: 1px;
@@ -63,7 +69,7 @@
             /* ... other desktop styles ... */
 
             /* Use grid layout for desktop */
-            .container-fluid > .row {
+            .container-fluid>.row {
                 display: grid;
                 grid-template-columns: 120px 1fr var(--panel-width-desktop);
                 gap: 1rem;
@@ -78,7 +84,8 @@
 
             main {
                 grid-column: 2;
-                padding-right: 1rem !important; /* Reset any previous padding */
+                padding-right: 1rem !important;
+                /* Reset any previous padding */
             }
 
             #right-panel {
@@ -88,7 +95,7 @@
                 grid-column: 3;
                 width: var(--panel-width-desktop);
                 min-width: var(--panel-width-desktop);
-                box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+                box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
                 transform: none;
                 transition: none;
                 border-top-left-radius: 18px;
@@ -96,7 +103,8 @@
             }
 
             #bottom-nav {
-                display: none; /* Hide bottom nav in desktop mode */
+                display: none;
+                /* Hide bottom nav in desktop mode */
             }
         }
 
@@ -105,19 +113,23 @@
             #sidebar {
                 display: none;
             }
+
             #bottom-nav {
                 position: fixed;
                 bottom: 0;
                 width: 100%;
                 z-index: 900;
-                display: block; /* Ensure it's visible in mobile mode */
+                display: block;
+                /* Ensure it's visible in mobile mode */
             }
+
             #bottom-nav .nav-container {
                 border-top-right-radius: 10px;
                 border-top-left-radius: 10px;
                 width: 100%;
                 padding: 0;
             }
+
             #bottom-nav .nav-link {
                 height: 60px;
                 color: var(--color-green-faint) !important;
@@ -130,18 +142,24 @@
                 text-align: center;
                 padding: 0;
             }
+
             #bottom-nav .nav-link:first-child {
                 border-left: none;
             }
+
             body {
-                padding-bottom: 60px; /* Space for bottom nav */
+                padding-bottom: 60px;
+                /* Space for bottom nav */
             }
+
             #right-panel {
                 position: fixed;
                 top: 0;
                 right: 0;
-                margin-top: 30px;;
-                bottom: 60px; /* Account for bottom nav */
+                margin-top: 30px;
+                ;
+                bottom: 60px;
+                /* Account for bottom nav */
                 max-width: (var(--panel-width-desktop));
                 width: var(--panel-width-desktop);
                 transform: translateX(100%);
@@ -150,6 +168,7 @@
                 border-top-left-radius: 18px;
                 border-bottom-left-radius: 18px;
             }
+
             #right-panel.show {
                 transform: translateX(0);
             }
@@ -159,7 +178,7 @@
             }
         }
 
-        #sidebar{
+        #sidebar {
             border-top-right-radius: 10px;
             border: 0.7px solid var(--color-green-light);
             background-color: var(--background-image-overlay-blur);
@@ -168,11 +187,12 @@
             margin-top: 1.5rem;
         }
 
-        .nav-container a:first-child{
+        .nav-container a:first-child {
             border-top-right-radius: 10px;
         }
-        .nav-container a{
-            
+
+        .nav-container a {
+
             height: 82px;
             color: var(--color-green-faint) !important;
             font-size: 14px;
@@ -192,32 +212,34 @@
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 0.75rem;
         }
-        
-  
+
+
 
         .card-container {
             width: 100%;
             max-width: 450px;
             margin: 0 auto;
         }
-        
+
         /* Update card hover effect for new structure */
         .card {
             cursor: pointer;
             transition: transform 0.2s;
-            background-color: #303235; /* Dark grey background */
+            background-color: #303235;
+            /* Dark grey background */
             border-radius: 18px;
 
-  border: solid;
-  border-width: 0.7px;
-  box-shadow: 0px 0px 1px black;
-  border-color: #575757;
+            border: solid;
+            border-width: 0.7px;
+            box-shadow: 0px 0px 1px black;
+            border-color: #575757;
         }
 
         .card-body2 {
-        flex: 1 1 auto;
+            flex: 1 1 auto;
             padding: 6px;
-            color: white; /* White text for all content */
+            color: white;
+            /* White text for all content */
         }
 
         .metric {
@@ -234,7 +256,7 @@
         }
 
         /* Ensure device name is white */
-        .card-title{
+        .card-title {
             color: white;
             margin-bottom: 0;
             font-weight: 600;
@@ -280,133 +302,137 @@
         }
 
         .no-gutter {
-    --bs-gutter-x: 0 !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-}
+            --bs-gutter-x: 0 !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
 
-.p12{
-    font-size: 12px;
-}
+        .p12 {
+            font-size: 12px;
+        }
 
-.p18{
-    font-size: 18px;
-}
+        .p18 {
+            font-size: 18px;
+        }
 
-.p25{
-    font-size: 25px;
-}
+        .p25 {
+            font-size: 25px;
+        }
 
-.sectionTitle{
-    color: white;
-}
+        .sectionTitle {
+            color: white;
+        }
 
-.green-icon{
-    color: #088f51 !important;
-}
+        .green-icon {
+            color: #088f51 !important;
+        }
 
-.red-icon{
-    color: red;
-}
+        .red-icon {
+            color: red;
+        }
 
-.power-button {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background-color: white;
-    border: 8px solid #2491ff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    padding: 0;
-    box-shadow: 0 0px 8px rgba(0, 0, 0, 0.5);
-    transition: box-shadow 0.2s ease-in-out;
-}
+        .power-button {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background-color: white;
+            border: 8px solid #2491ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0;
+            box-shadow: 0 0px 8px rgba(0, 0, 0, 0.5);
+            transition: box-shadow 0.2s ease-in-out;
+        }
 
-.blue-border {
-    border: 8px solid #2491ff;
-    box-shadow: 0 0 15px rgba(36, 145, 255, 0.4),
-                0 0 30px rgba(36, 145, 255, 0.2); /* Double shadow for stronger effect */
-}
+        .blue-border {
+            border: 8px solid #2491ff;
+            box-shadow: 0 0 15px rgba(36, 145, 255, 0.4),
+                0 0 30px rgba(36, 145, 255, 0.2);
+            /* Double shadow for stronger effect */
+        }
 
-.blue-icon {
-    color: #2491ff !important;
-}
+        .blue-icon {
+            color: #2491ff !important;
+        }
 
-.green-border {
-    border: 8px solid #088f51;
-    box-shadow: 0 0 15px rgba(8, 143, 81, 0.4),
-                0 0 30px rgba(8, 143, 81, 0.2); /* Double shadow for stronger effect */
-}
+        .green-border {
+            border: 8px solid #088f51;
+            box-shadow: 0 0 15px rgba(8, 143, 81, 0.4),
+                0 0 30px rgba(8, 143, 81, 0.2);
+            /* Double shadow for stronger effect */
+        }
 
-.orange-border {
-    border: 8px solid #ff8800;
-    box-shadow: 0 0 15px rgb(255, 136, 0),
+        .orange-border {
+            border: 8px solid #ff8800;
+            box-shadow: 0 0 15px rgb(255, 136, 0),
                 0 0 30px rgb(255, 136, 0),
-                0 0 45px rgb(255, 136, 0); /* Triple shadow for intense neon effect */
-}
+                0 0 45px rgb(255, 136, 0);
+            /* Triple shadow for intense neon effect */
+        }
 
 
-.orange-icon {
-    color: #ff8800 !important;
-}
+        .orange-icon {
+            color: #ff8800 !important;
+        }
 
 
-.grey-border {
-    border: 8px solid #808080;
-}
+        .grey-border {
+            border: 8px solid #808080;
+        }
 
-.violet-border {
-    border: 8px solid #800080;
-    box-shadow: 0 0 15px rgba(128, 0, 128, 0.4),
-    0 0 30px rgba(128, 0, 128, 0.2); /* Double shadow for stronger effect */
-}
+        .violet-border {
+            border: 8px solid #800080;
+            box-shadow: 0 0 15px rgba(128, 0, 128, 0.4),
+                0 0 30px rgba(128, 0, 128, 0.2);
+            /* Double shadow for stronger effect */
+        }
 
-.violet-icon {
-    color: #800080 !important;
-}
+        .violet-icon {
+            color: #800080 !important;
+        }
 
-.grey-icon {
-    color: #808080 !important;
-}
+        .grey-icon {
+            color: #808080 !important;
+        }
 
-.power-button i {
-    font-size: 24px;
-}
+        .power-button i {
+            font-size: 24px;
+        }
 
-.device-card {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: 1rem;
-    align-items: center;
-}
+        .device-card {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 1rem;
+            align-items: center;
+        }
 
-.device-image img {
-    height: 100%;
-    width: auto;
-    max-height: 60px;
-}
+        .device-image img {
+            height: 100%;
+            width: auto;
+            max-height: 60px;
+        }
 
-.device-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
+        .device-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
 
-.right {
-    justify-self: end;
-}
-
+        .right {
+            justify-self: end;
+        }
     </style>
 </head>
+
 <body>
     <div class="background-image"></div>
     <!-- Add backdrop div -->
     <div class="panel-backdrop"></div>
-    
+
     <div class="container-fluid">
         <div class="row">
             <div class="logo-container">
@@ -419,7 +445,7 @@
                 <a class="nav-link" href="#"> <i class="p25 fa-solid fa-bolt"></i><br>Energy</a>
 
                 <a class="nav-link" href="#"> <i class="p25 fa-solid fa-gear"></i><br>Settings</a>
-                
+
                 <a class="nav-link" href="#"> <i class="p25 fa-solid fa-circle-question"></i><br>Support</a>
             </div>
 
@@ -434,8 +460,8 @@
                                     <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo">
                                 </div>
                                 <div class="device-info">
-                                    <span class="card-title">Device Name</span> 
-                                    <div class="metric"> 
+                                    <span class="card-title">Device Name</span>
+                                    <div class="metric">
                                         3.1 W <i class="fa-solid fa-bolt"></i> 231.5 V
                                     </div>
                                 </div>
@@ -455,8 +481,8 @@
                                     <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo">
                                 </div>
                                 <div class="device-info">
-                                    <span class="card-title">Device Name</span> 
-                                    <div class="metric"> 
+                                    <span class="card-title">Device Name</span>
+                                    <div class="metric">
                                         3.1 W <i class="fa-solid fa-bolt"></i> 231.5 V
                                     </div>
                                 </div>
@@ -475,8 +501,8 @@
                                     <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo">
                                 </div>
                                 <div class="device-info">
-                                    <span class="card-title">Device Name</span> 
-                                    <div class="metric"> 
+                                    <span class="card-title">Device Name</span>
+                                    <div class="metric">
                                         <i class="fa-solid fa-link-slash red-icon"></i> offline 1:45
                                     </div>
                                 </div>
@@ -491,8 +517,8 @@
                                     <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo">
                                 </div>
                                 <div class="device-info">
-                                    <span class="card-title">Device Name</span> 
-                                    <div class="metric"> 
+                                    <span class="card-title">Device Name</span>
+                                    <div class="metric">
                                         3.1 W <i class="fa-solid fa-bolt"></i> 231.5 V
                                     </div>
                                 </div>
@@ -513,8 +539,8 @@
                                     <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo">
                                 </div>
                                 <div class="device-info">
-                                    <span class="card-title">Device Name</span> 
-                                    <div class="metric"> 
+                                    <span class="card-title">Device Name</span>
+                                    <div class="metric">
                                         2.4 kW <i class="fa-solid fa-bolt"></i> 231.5 V
                                     </div>
                                 </div>
@@ -534,8 +560,8 @@
                                     <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo">
                                 </div>
                                 <div class="device-info">
-                                    <span class="card-title">Device Name</span> 
-                                    <div class="metric"> 
+                                    <span class="card-title">Device Name</span>
+                                    <div class="metric">
                                         3.1 W <i class="fa-solid fa-bolt"></i> 231.5 V
                                     </div>
                                 </div>
@@ -556,8 +582,8 @@
             <!-- Right info panel -->
             <div id="right-panel" class="col-md-3 col-lg-2 p-0">
                 <div style="height: 32px; background-color: #242527; position: relative; border-top-left-radius: 18px;">
-                    <button type="button" class="panel-close" aria-label="Close" 
-                    style="font-size: 26px; position: absolute; right: 10px; top: 5px; background: none; border: none; color: silver;">
+                    <button type="button" class="panel-close" aria-label="Close"
+                        style="font-size: 26px; position: absolute; right: 10px; top: 5px; background: none; border: none; color: silver;">
                         <i class="fa-solid fa-times"></i>
                     </button>
                 </div>
@@ -575,9 +601,12 @@
     </div>
 
     <!-- Bottom navigation for mobile -->
-    <nav id="bottom-nav" class="navbar navbar-expand navbar-light">
-        <div class="container-fluid justify-content-around nav-container" style="background-color: var(--background-image-overlay-blur); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border: 0.7px solid var(--color-green-light);">
-            <a class="nav-link active" style="width: 25%;"><i class="p25 fa-solid fa-tachometer-alt-fast"></i><br>Devices</a>
+    <nav id="bottom-nav" class="navbar navbar-expand navbar-light"
+        style="margin-bottom: 0; padding-bottom: 0; position: fixed; bottom: 0; left: 0; width: 100%;">
+        <div class="container-fluid justify-content-around nav-container"
+            style="background-color: var(--background-image-overlay-blur); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border: 0.7px solid var(--color-green-light); margin-bottom: 0;">
+            <a class="nav-link active" style="width: 25%;"><i
+                    class="p25 fa-solid fa-tachometer-alt-fast"></i><br>Devices</a>
             <a class="nav-link" style="width: 25%;"><i class="p25 fa-solid fa-bolt"></i><br>Energy</a>
             <a class="nav-link" style="width: 25%;"><i class="p25 fa-solid fa-gear"></i><br>Settings</a>
             <a class="nav-link" style="width: 25%;"><i class="p25 fa-solid fa-circle-question"></i><br>Support</a>
@@ -590,7 +619,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const card = document.getElementById('card-1');
             const rightPanel = document.getElementById('right-panel');
             const mainContent = document.querySelector('main');
@@ -607,7 +636,7 @@
             closeButton.addEventListener('click', togglePanel);
 
             // Close panel when clicking outside (optional)
-            document.addEventListener('click', function(event) {
+            document.addEventListener('click', function (event) {
                 const isClickInside = rightPanel.contains(event.target) || card.contains(event.target);
                 if (!isClickInside && rightPanel.classList.contains('show')) {
                     togglePanel();
@@ -616,13 +645,13 @@
 
             // Add power button functionality
             const powerButtons = document.querySelectorAll('.power-button');
-            
+
             powerButtons.forEach(button => {
-                button.addEventListener('click', function(e) {
+                button.addEventListener('click', function (e) {
                     e.stopPropagation(); // Prevent card click event
-                    
+
                     const icon = button.querySelector('i');
-                    
+
                     if (button.classList.contains('green-border')) {
                         // Change from green to grey
                         button.classList.remove('green-border');
@@ -653,4 +682,5 @@
         });
     </script>
 </body>
+
 </html>
