@@ -110,6 +110,17 @@
 
 
         @media (max-width: 1023.98px) {
+            /* Fix viewport height issues on mobile Chrome */
+            body {
+                margin: 0;
+                padding: 0;
+                height: 100%;
+                min-height: -webkit-fill-available;
+                overflow: hidden;
+                position: fixed;
+                width: 100%;
+            }
+
             #sidebar {
                 display: none;
             }
@@ -117,10 +128,16 @@
             #bottom-nav {
                 position: fixed;
                 bottom: 0;
-                width: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 95%;
                 z-index: 900;
                 display: block;
-                /* Ensure it's visible in mobile mode */
+                margin: 0;
+                padding: 0;
+                /* Add these properties to ensure it stays at bottom */
+                height: max-content;
+                min-height: max-content;
             }
 
             #bottom-nav .nav-container {
@@ -159,9 +176,12 @@
                 border-left: none;
             }
 
-            body {
-                padding-bottom: 60px;
-                /* Space for bottom nav */
+            main {
+                height: calc(100vh - 100px);
+                /* Add fallback for mobile Chrome */
+                height: calc(100dvh - 100px);
+                overflow-y: auto;
+                padding-bottom: 80px;
             }
 
             #right-panel {
