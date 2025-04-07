@@ -118,29 +118,46 @@
         }
 
         @media (max-width: 1023.98px) {
-            .container-fluid {
-                padding: 0;
-                max-width: 100%;
-                overflow-x: hidden;
-            }
-
-            main {
-                overflow-x: hidden;
-                width: 100%;
-                padding-left: 1rem;
-                padding-right: 1rem;
-            }
-
+            /* Mobile styles */
             .cards-grid {
-                width: 100%;
-                margin: 0;
-                padding: 0;
+                display: flex !important; /* Override any other display settings */
+                flex-direction: column !important;
+                align-items: center !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
             }
 
             .card-container {
-                width: 100%;
-                max-width: 100%;
-                padding: 0;
+                width: 97% !important;
+                max-width: 436px !important;
+                margin: 0.375rem auto !important; /* Use auto for horizontal margins */
+                padding: 0 !important;
+                display: flex !important;
+                justify-content: center !important;
+            }
+
+            .card {
+                width: 100% !important;
+                transform: scale(0.97);
+                transform-origin: center;
+            }
+
+            /* Remove any Bootstrap column classes that might interfere */
+            .col-12, .col-md {
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+            }
+
+            /* Reset main padding */
+            main {
+                padding: 0 !important;
+            }
+
+            /* Add padding only to title */
+            .sectionTitle {
+                padding: 1rem !important;
             }
 
             #sidebar {
