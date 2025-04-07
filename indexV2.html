@@ -141,7 +141,14 @@
                 align-items: center;
                 text-align: center;
                 padding: 8px 0;
-                line-height: 1.2;
+            }
+
+            /* Chrome-only style */
+            @supports (-webkit-font-smoothing: antialiased) {
+                #bottom-nav .nav-link {
+                    padding: 10px 0 2px 0; /* Even more top padding for Chrome */
+                    line-height: 0.6;
+                }
             }
 
             #bottom-nav .nav-link i {
