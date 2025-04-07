@@ -108,17 +108,39 @@
             }
         }
 
+        /* Add/modify these styles */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            overflow-x: hidden;
+            position: fixed;
+        }
 
         @media (max-width: 1023.98px) {
-            /* Fix viewport height issues on mobile Chrome */
-            body {
+            .container-fluid {
+                padding: 0;
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+
+            main {
+                overflow-x: hidden;
+                width: 100%;
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            .cards-grid {
+                width: 100%;
                 margin: 0;
                 padding: 0;
-                height: 100%;
-                min-height: -webkit-fill-available;
-                overflow: hidden;
-                position: fixed;
+            }
+
+            .card-container {
                 width: 100%;
+                max-width: 100%;
+                padding: 0;
             }
 
             #sidebar {
