@@ -479,6 +479,17 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
                     }
                 });
 
+
+                slider.addEventListener('touchstart', function(e) {
+                    this.isDragging = true;
+                    window.isDragging = true;
+                    if (window.pollInterval) {
+                        clearInterval(window.pollInterval);
+                        window.pollInterval = null;
+                        console.log('Polling paused during touch drag');
+                    }
+                });
+                
                 // Track when user stops dragging
                 document.addEventListener('mouseup', function() {
                     slider.isDragging = false;
@@ -487,6 +498,15 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
                     if (!window.pollInterval) {
                         window.pollInterval = setInterval(pollDeviceStatus, 1000);
                         console.log('Polling resumed after slider drag');
+                    }
+                });
+
+                document.addEventListener('touchend', function() {
+                    slider.isDragging = false;
+                    window.isDragging = false;
+                    if (!window.pollInterval) {
+                        window.pollInterval = setInterval(pollDeviceStatus, 500);
+                        console.log('Polling resumed after touch drag');
                     }
                 });
 
