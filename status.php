@@ -54,7 +54,6 @@ while ($row = $result->fetch_assoc()) {
         'offline' => $offlineStatus,
         'color' => $colorString,
         'power' => (float)$row['power'], // Convert to same format as original
-        'voltage' => (float)$row['voltage'], // Convert to same format as original
         'state' => $row['state'] ? 'on' : 'off',
         'isDimmable' => $row['isDimmable'],
         'duty' => $duty,

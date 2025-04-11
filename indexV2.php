@@ -421,6 +421,21 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
                                     powerButton.querySelector('i').classList.add(`${deviceData.color}-icon`);
                                 }
 
+                                // Handle dimmable devices
+                                if (deviceData.isDimmable) {
+                                    // Update all slider value displays for this device/channel
+                                    const sliderValueDisplays = document.getElementsByClassName(`slider-value-${deviceId}-${channel}`);
+                                    for (let display of sliderValueDisplays) {
+                                        display.textContent = `${deviceData.duty}%`;
+                                    }
+
+                                    // Update all sliders for this device/channel
+                                    const sliders = document.querySelectorAll(`.custom-slider[device="${deviceId}"][channel="${channel}"]`);
+                                    sliders.forEach(slider => {
+                                        slider.value = deviceData.duty;
+                                    });
+                                }
+
                                 // Update metric information
                                 if (metricDiv) {
                                     if (deviceData.offline) {
@@ -428,7 +443,7 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
                                         metricDiv.innerHTML = `<i class="fa-solid fa-link-slash red-icon"></i> offline ${deviceData.offline}`;
                                     } else {
                                         // Construct metric content
-                                        let metricContent = `${deviceData.power}W <i class="fa-solid fa-bolt"></i> ${deviceData.voltage}V`;
+                                        let metricContent = `${deviceData.power}W <i class="fa-solid fa-bolt"></i>`;
                                         
                                         // Add duty information if present and greater than 0
                                         if (deviceData.duty && deviceData.duty > 0) {
@@ -445,10 +460,10 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
             }
 
             // Poll every 2 seconds
-            //setInterval(pollDeviceStatus, 2000);
+            setInterval(pollDeviceStatus, 2000);
             
             // Initial poll
-            //pollDeviceStatus();
+            pollDeviceStatus();
 
             // Add this to your existing DOMContentLoaded event listener
             const sliders = document.querySelectorAll('.custom-slider');
