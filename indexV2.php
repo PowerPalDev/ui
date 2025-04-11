@@ -96,8 +96,8 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
                                     <div class="metric">
                                         <table class="metric-table">
                                             <tr>
-                                                <td class="metric-cell"><i class="fa-solid fa-bolt"></i> 3.1 W</td>
-                                                <td class="metric-cell"><i class="fa-solid fa-temperature-half"></i> 22°C</td>
+                                                <td class="powerReading metric-cell"><i class="fa-solid fa-bolt"></i> 3.1 W</td>
+                                                <td class="temperatureReading metric-cell"><i class="fa-solid fa-temperature-half"></i> 22°C</td>
                                             </tr>
                                             <tr>
                                             <td colspan="2">
@@ -459,15 +459,38 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
                     .catch(error => console.error('Error polling device status:', error));
             }
 
-            // Poll every 2 seconds
-            setInterval(pollDeviceStatus, 500);
             
-            // Initial poll
-            //pollDeviceStatus();
+            window.pollInterval = setInterval(pollDeviceStatus, 500);
+            window.isDragging = false;
 
-            // Add this to your existing DOMContentLoaded event listener
+            // Then in the slider event listeners
             const sliders = document.querySelectorAll('.custom-slider');
+
             sliders.forEach(slider => {
+                // Track when user starts dragging
+                slider.addEventListener('mousedown', function(e) {
+                    this.isDragging = true;
+                    window.isDragging = true;
+                    // Clear existing interval
+                    if (window.pollInterval) {
+                        clearInterval(window.pollInterval);
+                        window.pollInterval = null; // Clear the reference
+                        console.log('Polling paused during slider drag');
+                    }
+                });
+
+                // Track when user stops dragging
+                document.addEventListener('mouseup', function() {
+                    slider.isDragging = false;
+                    window.isDragging = false;
+                    // Only start a new interval if one isn't already running
+                    if (!window.pollInterval) {
+                        window.pollInterval = setInterval(pollDeviceStatus, 1000);
+                        console.log('Polling resumed after slider drag');
+                    }
+                });
+
+                // Keep your existing input event listener
                 slider.addEventListener('input', function(e) {
                     // Debounce the slider input to prevent too many requests
                     if (this.debounceTimeout) {
@@ -486,12 +509,17 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
                     
                     // Set a timeout to actually send the request after user stops sliding
                     this.debounceTimeout = setTimeout(() => {
-
-                        
                         // Send the update to the server
                         fetch(`${backendAddress}ui/update.php?deviceId=${deviceId}&channel=${channel}&duty=${currentValue}`)
                             .then(response => response.json())
-                            .then(data => console.log('Duty updated:', data))
+                            .then(data => {
+                                console.log('Duty updated:', data);
+                                // Restart polling after update is complete
+                                if (!window.pollInterval && !window.isDragging) {
+                                    window.pollInterval = setInterval(pollDeviceStatus, 500);
+                                    console.log('Polling resumed after duty update');
+                                }
+                            })
                             .catch(error => console.error('Error updating duty:', error));
                     }, 300); // 300ms debounce delay
                 });
