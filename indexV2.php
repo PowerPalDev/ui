@@ -14,7 +14,7 @@
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="css.css">
+    <link rel="stylesheet" href="css.css?<?php echo time(); ?>">
 
 </head>
 
@@ -72,11 +72,12 @@
                                 </div>
                                 <div class="device-info">
                                     <span class="card-title">Heat Pump</span>
+                                    
                                     <div class="metric">
-                                        <table>
+                                        <table class="metric-table">
                                             <tr>
-                                                <td><i class="fa-solid fa-bolt"></i> 3.1 W</td>
-                                                <td><i class="fa-solid fa-temperature-half"></i> 22°C</td>
+                                                <td class="metric-cell"><i class="fa-solid fa-bolt"></i> 3.1 W</td>
+                                                <td class="metric-cell"><i class="fa-solid fa-temperature-half"></i> 22°C</td>
                                             </tr>
                                             <tr>
                                                 <td colspan="2">
