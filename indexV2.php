@@ -1,5 +1,5 @@
 <?php
-
+$backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "/";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,7 +15,9 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css.css?<?php echo time(); ?>">
-
+    <script>
+        const backendAddress = "<?php echo $backendAddress; ?>";
+    </script>
 </head>
 
 <body>
@@ -257,7 +259,7 @@
                 // Check if deviceId and channel are provided
                 if (deviceId && channel) {
                     // Make an AJAX GET request to fetch device information
-                    fetch(`//127.0.0.1/ui/info.php?deviceId=${deviceId}&channel=${channel}`)
+                    fetch(`${backendAddress}ui/info.php?deviceId=${deviceId}&channel=${channel}`)
                         .then(response => {
                             if (!response.ok) {
                                 throw new Error('Network response was not ok');
@@ -278,7 +280,7 @@
             }
             // Get all device cards
             const deviceCards = document.querySelectorAll('.device-card');
-            
+            /*
             // Add click event listener to each device card
             deviceCards.forEach(card => {
                 card.addEventListener('click', function() {
@@ -297,6 +299,7 @@
                     // For example: updateRightPanelInfo(deviceId, channel);
                 });
             });
+            */
             
             function turnOnOff(deviceId, channel, state) {
                 // Check if deviceId and channel are provided
@@ -306,7 +309,7 @@
                 }
                 
                 // Make an AJAX request to control the device
-                fetch(`//127.0.0.1/ui/update.php?deviceId=${deviceId}&channel=${channel}&state=${state}`)
+                fetch(`${backendAddress}ui/update.php?deviceId=${deviceId}&channel=${channel}&state=${state}`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
@@ -467,7 +470,7 @@
                         const channel = deviceCard.getAttribute('channel');
                         
                         // Send the update to the server
-                        fetch(`//127.0.0.1/ui/update.php?deviceId=${deviceId}&channel=${channel}&duty=${currentValue}`)
+                        fetch(`${backendAddress}ui/update.php?deviceId=${deviceId}&channel=${channel}&duty=${currentValue}`)
                             .then(response => response.json())
                             .then(data => console.log('Duty updated:', data))
                             .catch(error => console.error('Error updating duty:', error));
@@ -481,6 +484,25 @@
                 });
             });
         });
+
+    function adjustTemperature(e, delta) {
+        e.stopPropagation(); // Prevent event bubbling
+        
+        const tempSpan = document.querySelector('.current-temp');
+        let currentTemp = parseFloat(tempSpan.textContent);
+        currentTemp += delta;
+        // Round to nearest 0.5
+        currentTemp = Math.round(currentTemp * 2) / 2;
+        tempSpan.textContent = currentTemp.toFixed(1) + '°C';
+        
+        // Here you would also want to send this new temperature to your backend
+        const deviceId = 'AC1518D6640C';
+        const channel = '25';
+        fetch(`//127.0.0.1/ui/update.php?deviceId=${deviceId}&channel=${channel}&temperature=${currentTemp}`)
+            .then(response => response.json())
+            .then(data => console.log('Temperature updated:', data))
+            .catch(error => console.error('Error updating temperature:', error));
+    }   
     </script>
 </body>
 
