@@ -353,7 +353,7 @@
             gap: 8px;
             width: fit-content;
             white-space: nowrap;
-            font-size: 16px;
+            font-size: 14px;
             margin-top: -5px;
         }
 
@@ -822,7 +822,7 @@
 
             // Close panel when clicking outside (optional)
             document.addEventListener('click', function (event) {
-                const isClickInside = rightPanel.contains(event.target) || card.contains(event.target);
+                const isClickInside = rightPanel.contains(event.target) || mainContent.contains(event.target);
                 if (!isClickInside && rightPanel.classList.contains('show')) {
                     togglePanel();
                 }
@@ -911,7 +911,7 @@
                                         metricDiv.innerHTML = `<i class="fa-solid fa-link-slash red-icon"></i> offline ${deviceData.offline}`;
                                     } else {
                                         // Construct metric content
-                                        let metricContent = `${deviceData.power}W <i class="fa-solid fa-bolt"></i> ${deviceData.tension}V`;
+                                        let metricContent = `${deviceData.power}W <i class="fa-solid fa-bolt"></i> ${deviceData.voltage}V`;
                                         
                                         // Add duty information if present and greater than 0
                                         if (deviceData.duty && deviceData.duty > 0) {

@@ -1,69 +1,76 @@
 <?php
 header('Content-Type: application/json');
 
-// Function to generate random power value between 1 and 3000
-function getRandomPower() {
-    return round(rand(100, 3000) / 10, 1);
+// Database connection
+$db = new mysqli('127.0.0.1', 'roy', 'roy', 'dsTest1');
+
+if ($db->connect_error) {
+    die(json_encode(['error' => 'Database connection failed: ' . $db->connect_error]));
 }
 
-// Function to generate random voltage around 230V
-function getRandomVoltage() {
-    return round(rand(2290, 2330) / 10, 1);
+// Query to get all channels
+$query = "SELECT * FROM channel";
+$result = $db->query($query);
+
+if (!$result) {
+    die(json_encode(['error' => 'Query failed: ' . $db->error]));
 }
 
-// Function to get random duty cycle (0-100)
-function getRandomDuty() {
-    return rand(0, 100);
-}
+$response = [];
 
-// Function to get random color (blue, green, orange, grey)
-function getRandomColor() {
-    $colors = ['blue', 'green', 'orange', 'grey'];
-    return $colors[array_rand($colors)];
-}
-
-// Simulate occasional offline status
-function getOfflineStatus() {
-    if (rand(1, 10) === 1) { // 10% chance to be offline
-        $minutes = rand(1, 60);
-        return "$minutes:00";
+// Process results and build response structure
+while ($row = $result->fetch_assoc()) {
+    $deviceId = $row['deviceId']; // Convert device ID to hex format
+    
+    if (!isset($response[$deviceId])) {
+        $response[$deviceId] = [];
     }
-    return false;
+    
+    // Check if device is offline (more than 5 minutes since last update)
+    $offlineStatus = false;
+    if (time() - $row['lastUpdate'] > 300) { // 5 minutes = 300 seconds
+        $timeDiff = time() - $row['lastUpdate'];
+        $hours = floor($timeDiff / 3600);
+        $minutes = floor(($timeDiff % 3600) / 60);
+        $offlineStatus = sprintf("%d:%02d", $hours, $minutes);
+    }
+
+    if ($row['state'] == 1) {
+        $colorString = $row['color'];
+    } else {
+        $colorString = 'grey';
+    }
+
+    if($row['isDimmable'] == 1) {
+        $duty = $row['duty'];
+    } else {
+        $duty = 0;
+    }
+
+    if($row['isThermostat'] == 1) {
+        $currentTemp = $row['duty'];
+        $targetTemp = $row['targetTemp'];
+    } else {
+        $currentTemp = 0;
+        $targetTemp = 0;
+    }
+    
+    $response[$deviceId][$row['channel']] = [
+        'offline' => $offlineStatus,
+        'color' => $colorString,
+        'power' => (float)$row['power'], // Convert to same format as original
+        'voltage' => (float)$row['voltage'], // Convert to same format as original
+        'state' => $row['state'] ? 'on' : 'off',
+        'isDimmable' => $row['isDimmable'],
+        'duty' => $duty,
+        'isThermostat' => $row['isThermostat'],
+        'currentTemp' => $currentTemp,
+        'targetTemp' => $targetTemp,
+    ];
 }
-
-// Create response data structure
-$response = [
-    'AC1518D6640C' => [
-        '33' => [
-            'offline' => getOfflineStatus(),
-            'color' => getRandomColor(),
-            'power' => getRandomPower(),
-            'tension' => getRandomVoltage(),
-            'state' => rand(0, 1) ? 'on' : 'off',
-            'duty' => getRandomDuty()
-        ],
-        '25' => [
-            'offline' => getOfflineStatus(),
-            'color' => getRandomColor(),
-            'power' => getRandomPower(),
-            'tension' => getRandomVoltage(),
-            'state' => rand(0, 1) ? 'on' : 'off',
-            'duty' => getRandomDuty()
-        ],
-        '26' => [
-            'offline' => getOfflineStatus(),
-            'color' => getRandomColor(),
-            'power' => getRandomPower(),
-            'tension' => getRandomVoltage(),
-            'state' => rand(0, 1) ? 'on' : 'off',
-            'duty' => getRandomDuty()
-        ]
-    ]
-];
-
-// Add random delay to simulate network latency (50-200ms)
-usleep(rand(50000, 200000));
 
 // Return JSON response
-echo json_encode($response);
-?>
+echo json_encode($response, JSON_PRETTY_PRINT);
+
+// Close database connection
+$db->close();
