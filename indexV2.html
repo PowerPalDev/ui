@@ -595,7 +595,7 @@
                                 <div class="device-info">
                                     <span class="card-title">Device Name</span>
                                     <div class="metric">
-                                        3.1 W <i class="fa-solid fa-bolt"></i> 231.5 V
+                                        3.1 W <i class="fa-solid fa-bolt"></i> 231.5 V <i class="fa-regular fa-lightbulb"></i> 90%
                                     </div>
                                 </div>
                                 <div class="right">
@@ -747,7 +747,7 @@
                 // Check if deviceId and channel are provided
                 if (deviceId && channel) {
                     // Make an AJAX GET request to fetch device information
-                    fetch(`//127.0.0.1/ui/info.php?deviceId=${deviceId}&channel=${channel}&info=1`)
+                    fetch(`//127.0.0.1/ui/info.php?deviceId=${deviceId}&channel=${channel}`)
                         .then(response => {
                             if (!response.ok) {
                                 throw new Error('Network response was not ok');
@@ -876,6 +876,62 @@
                     }
                 });
             });
+
+            // Add polling function
+            function pollDeviceStatus() {
+                fetch('//127.0.0.1/ui/status.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        // Iterate through each device card
+                        document.querySelectorAll('.device-card').forEach(card => {
+                            const deviceId = card.getAttribute('device');
+                            const channel = card.getAttribute('channel');
+                            const metricDiv = card.querySelector('.metric');
+                            const powerButton = card.querySelector('.power-button');
+
+                            // Check if we have data for this device and channel
+                            if (data[deviceId] && data[deviceId][channel]) {
+                                const deviceData = data[deviceId][channel];
+
+                                // Update power button color
+                                if (powerButton) {
+                                    // Remove all existing color classes
+                                    powerButton.classList.remove('blue-border', 'green-border', 'grey-border', 'orange-border', 'violet-border');
+                                    powerButton.querySelector('i').classList.remove('blue-icon', 'green-icon', 'grey-icon', 'orange-icon', 'violet-icon');
+                                    
+                                    // Add new color class
+                                    powerButton.classList.add(`${deviceData.color}-border`);
+                                    powerButton.querySelector('i').classList.add(`${deviceData.color}-icon`);
+                                }
+
+                                // Update metric information
+                                if (metricDiv) {
+                                    if (deviceData.offline) {
+                                        // Show offline status if it's offline
+                                        metricDiv.innerHTML = `<i class="fa-solid fa-link-slash red-icon"></i> offline ${deviceData.offline}`;
+                                    } else {
+                                        // Construct metric content
+                                        let metricContent = `${deviceData.power}W <i class="fa-solid fa-bolt"></i> ${deviceData.tension}V`;
+                                        
+                                        // Add duty information if present and greater than 0
+                                        if (deviceData.duty && deviceData.duty > 0) {
+                                            metricContent += ` <i class="fa-regular fa-lightbulb"></i> ${deviceData.duty}%`;
+                                        }
+                                        
+                                        metricDiv.innerHTML = metricContent;
+                                    }
+                                }
+                            }
+                        });
+                    })
+                    .catch(error => console.error('Error polling device status:', error));
+            }
+
+            // Poll every 2 seconds
+            setInterval(pollDeviceStatus, 2000);
+            
+            // Initial poll
+            pollDeviceStatus();
         });
     </script>
 </body>
