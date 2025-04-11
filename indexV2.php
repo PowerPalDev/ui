@@ -1,3 +1,6 @@
+<?php
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,533 +14,8 @@
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css.css">
 
-    <style>
-        :root {
-            /* Configure panel widths here */
-            --panel-width-desktop: 300px;
-            /* Panel width on desktop */
-            --panel-overlay-percentage: 100%;
-            /* How much panel covers on mobile (in %) */
-            --panel-animation-speed: 0.3s;
-            /* Panel slide animation speed */
-
-            --color-primary: #088f51;
-            --color-green-light: #576f64;
-            --color-green-faint: #eaf2ee;
-            --color-3: #088f51;
-            --radius-small: 8px;
-            --background-image-overlay: rgba(0, 0, 0, .7);
-            --background-image-overlay-blur: rgba(51, 62, 54, 0.3);
-
-
-        }
-
-        .background-image {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("https://ds.seisho.us/img/wind-turbine-in-sea.jpg");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            z-index: -1;
-            filter: blur(1px);
-
-            &::after {
-                content: "";
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: var(--background-image-overlay);
-            }
-        }
-
-        #right-panel {
-            background-color: #242527;
-            border-style: solid;
-            border-color: rgb(107, 107, 107);
-            border-width: 1px;
-        }
-
-        /* Custom styles */
-        @media (min-width: 1024px) {
-            /* ... other desktop styles ... */
-
-            /* Use grid layout for desktop */
-            .container-fluid>.row {
-                display: grid;
-                grid-template-columns: 120px 1fr var(--panel-width-desktop);
-                gap: 1rem;
-            }
-
-            #sidebar {
-                height: 100vh;
-                position: sticky;
-                top: 0;
-                grid-column: 1;
-            }
-
-            main {
-                grid-column: 2;
-                padding-right: 1rem !important;
-                /* Reset any previous padding */
-            }
-
-            #right-panel {
-                height: 100vh;
-                position: sticky;
-                top: 0;
-                grid-column: 3;
-                width: var(--panel-width-desktop);
-                min-width: var(--panel-width-desktop);
-                box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-                transform: none;
-                transition: none;
-                border-top-left-radius: 18px;
-                border-bottom-left-radius: 18px;
-            }
-
-            #bottom-nav {
-                display: none;
-                /* Hide bottom nav in desktop mode */
-            }
-        }
-
-        /* Add/modify these styles */
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            overflow-x: hidden;
-            position: fixed;
-        }
-
-        @media (max-width: 1023.98px) {
-            /* Mobile styles */
-            .cards-grid {
-                display: flex !important; /* Override any other display settings */
-                flex-direction: column !important;
-                align-items: center !important;
-                width: 100% !important;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-
-            .card-container {
-                width: 97% !important;
-                max-width: 436px !important;
-                margin: 0.375rem auto !important; /* Use auto for horizontal margins */
-                padding: 0 !important;
-                display: flex !important;
-                justify-content: center !important;
-            }
-
-            .card {
-                width: 100% !important;
-                transform: scale(0.97);
-                transform-origin: center;
-            }
-
-            /* Remove any Bootstrap column classes that might interfere */
-            .col-12, .col-md {
-                padding: 0 !important;
-                margin: 0 !important;
-                width: 100% !important;
-            }
-
-            /* Reset main padding */
-            main {
-                padding: 0 !important;
-            }
-
-            /* Add padding only to title */
-            .sectionTitle {
-                padding: 1rem !important;
-            }
-
-            #sidebar {
-                display: none;
-            }
-
-            #bottom-nav {
-                position: fixed;
-                bottom: 0;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 95%;
-                z-index: 900;
-                display: block;
-                margin: 0;
-                padding: 0;
-                /* Add these properties to ensure it stays at bottom */
-                height: max-content;
-                min-height: max-content;
-            }
-
-            #bottom-nav .nav-container {
-                border-top-right-radius: 10px;
-                border-top-left-radius: 10px;
-                width: 100%;
-                padding: 0;
-            }
-
-            #bottom-nav .nav-link {
-                height: 60px;
-                color: var(--color-green-faint) !important;
-                font-size: 14px;
-                border-left: 0.7px solid var(--color-green-light);
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                text-align: center;
-                padding: 8px 0;
-            }
-
-            /* Chrome-only style */
-            @supports (-webkit-font-smoothing: antialiased) {
-                #bottom-nav .nav-link {
-                    padding: 10px 0 2px 0; /* Even more top padding for Chrome */
-                    line-height: 0.6;
-                }
-            }
-
-            #bottom-nav .nav-link i {
-                line-height: 1;
-            }
-
-            #bottom-nav .nav-link:first-child {
-                border-left: none;
-            }
-
-            main {
-                height: calc(100vh - 100px);
-                /* Add fallback for mobile Chrome */
-                height: calc(100dvh - 100px);
-                overflow-y: auto;
-                padding-bottom: 80px;
-            }
-
-            #right-panel {
-                position: fixed;
-                top: 0;
-                right: 0;
-                margin-top: 30px;
-                ;
-                bottom: 60px;
-                /* Account for bottom nav */
-                max-width: (var(--panel-width-desktop));
-                width: var(--panel-width-desktop);
-                transform: translateX(100%);
-                transition: transform var(--panel-animation-speed) ease-in-out;
-                z-index: 999;
-                border-top-left-radius: 18px;
-                border-bottom-left-radius: 18px;
-            }
-
-            #right-panel.show {
-                transform: translateX(0);
-            }
-
-            .cards-grid {
-                grid-template-columns: 1fr;
-            }
-
-            /* Make main content area scrollable */
-            main {
-                height: calc(100vh - 100px); /* Adjust based on your header/nav heights */
-                overflow-y: auto;
-                padding-bottom: 80px;
-                /* Hide scrollbar for Chrome, Safari and Opera */
-                &::-webkit-scrollbar {
-                    display: none;
-                }
-                /* Hide scrollbar for IE, Edge and Firefox */
-                -ms-overflow-style: none;
-                scrollbar-width: none;
-            }
-
-            .logo-container {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                z-index: 900;
-                padding: 1rem;
-                background-color: var(--background-image-overlay-blur);
-                -webkit-backdrop-filter: blur(10px);
-                backdrop-filter: blur(10px);
-            }
-
-            /* Adjust main content position to account for fixed header */
-            main {
-                margin-top: 70px; /* Adjust based on your header height */
-            }
-        }
-
-        #sidebar {
-            border-top-right-radius: 10px;
-            border: 0.7px solid var(--color-green-light);
-            background-color: var(--background-image-overlay-blur);
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
-            margin-top: 1.5rem;
-        }
-
-        .nav-container a:first-child {
-            border-top-right-radius: 10px;
-        }
-
-        .nav-container a {
-
-            height: 82px;
-            color: var(--color-green-faint) !important;
-            font-size: 14px;
-            cursor: pointer;
-            border-bottom: 0.7px solid var(--color-green-light);
-            border-left: 0px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-
-        /* Card container styles */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 0.75rem;
-        }
-
-
-
-        .card-container {
-            width: 100%;
-            max-width: 450px;
-            margin: 0 auto;
-        }
-
-        /* Update card hover effect for new structure */
-        .card {
-            cursor: pointer;
-            transition: transform 0.2s;
-            background-color: #303235;
-            /* Dark grey background */
-            border-radius: 18px;
-
-            border: solid;
-            border-width: 0.7px;
-            box-shadow: 0px 0px 1px black;
-            border-color: #575757;
-        }
-
-        .card-body2 {
-            flex: 1 1 auto;
-            padding: 6px;
-            color: white;
-            /* White text for all content */
-        }
-
-        .metric {
-            background-color: #242527;
-            padding: 8px 12px;
-            border-radius: 18px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            width: fit-content;
-            white-space: nowrap;
-            font-size: 14px;
-            margin-top: -5px;
-        }
-
-        /* Ensure device name is white */
-        .card-title {
-            color: white;
-            margin-bottom: 0;
-            font-weight: 600;
-        }
-
-        /* Optional: adjust icon colors in metric to be more visible */
-        .metric i.fa-bolt {
-            color: #ffffff;
-        }
-
-        .card:hover {
-            transform: scale(1.02);
-        }
-
-        /* Close button for panel */
-        .panel-close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-            padding: 5px;
-        }
-
-        /* Optional: Add backdrop when panel is shown on mobile */
-        .panel-backdrop {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 998;
-            opacity: 0;
-            transition: opacity var(--panel-animation-speed) ease-in-out;
-        }
-
-        @media (max-width: 767.98px) {
-            .panel-backdrop.show {
-                display: block;
-                opacity: 1;
-            }
-        }
-
-        .no-gutter {
-            --bs-gutter-x: 0 !important;
-            margin-left: 0 !important;
-            margin-right: 0 !important;
-            padding-left: 0 !important;
-            padding-right: 0 !important;
-        }
-
-        .p12 {
-            font-size: 12px;
-        }
-
-        .p18 {
-            font-size: 18px;
-        }
-
-        .p25 {
-            font-size: 25px;
-        }
-
-        .sectionTitle {
-            color: white;
-        }
-
-        .green-icon {
-            color: #088f51 !important;
-        }
-
-        .red-icon {
-            color: red;
-        }
-
-        .power-button {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            background-color: white;
-            border: 8px solid #2491ff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            padding: 0;
-            box-shadow: 0 0px 8px rgba(0, 0, 0, 0.5);
-            transition: box-shadow 0.2s ease-in-out;
-        }
-
-        .blue-border {
-            border: 8px solid #2491ff;
-            box-shadow: 0 0 15px rgba(36, 145, 255, 0.4),
-                0 0 30px rgba(36, 145, 255, 0.2);
-            /* Double shadow for stronger effect */
-        }
-
-        .blue-icon {
-            color: #2491ff !important;
-        }
-
-        .green-border {
-            border: 8px solid #088f51;
-            box-shadow: 0 0 15px rgba(8, 143, 81, 0.4),
-                0 0 30px rgba(8, 143, 81, 0.2);
-            /* Double shadow for stronger effect */
-        }
-
-        .orange-border {
-            border: 8px solid #ff8800;
-            box-shadow: 0 0 15px rgb(255, 136, 0),
-                0 0 30px rgb(255, 136, 0),
-                0 0 45px rgb(255, 136, 0);
-            /* Triple shadow for intense neon effect */
-        }
-
-
-        .orange-icon {
-            color: #ff8800 !important;
-        }
-
-
-        .grey-border {
-            border: 8px solid #808080;
-        }
-
-        .violet-border {
-            border: 8px solid #800080;
-            box-shadow: 0 0 15px rgba(128, 0, 128, 0.4),
-                0 0 30px rgba(128, 0, 128, 0.2);
-            /* Double shadow for stronger effect */
-        }
-
-        .violet-icon {
-            color: #800080 !important;
-        }
-
-        .grey-icon {
-            color: #808080 !important;
-        }
-
-        .power-button i {
-            font-size: 24px;
-        }
-
-        .device-card {
-            display: grid;
-            grid-template-columns: auto 1fr auto;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .device-image img {
-            height: 100%;
-            width: auto;
-            max-height: 60px;
-        }
-
-        .device-info {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .right {
-            justify-self: end;
-        }
-
-        /* Prevent body scrolling */
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            overflow: hidden;
-            position: fixed;
-            width: 100%;
-        }
-    </style>
 </head>
 
 <body>
@@ -593,9 +71,18 @@
                                     <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo">
                                 </div>
                                 <div class="device-info">
-                                    <span class="card-title">Device Name</span>
+                                    <span class="card-title">Heat Pump</span>
                                     <div class="metric">
                                         3.1 W <i class="fa-solid fa-bolt"></i> 231.5 V <i class="fa-regular fa-lightbulb"></i> 90%
+                                    </div>
+                                    <div class="temperature-controls">
+                                        <button class="temp-button" onclick="adjustTemperature(-0.5)">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <span class="current-temp">21.5°C</span>
+                                        <button class="temp-button" onclick="adjustTemperature(0.5)">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="right">
@@ -933,6 +420,26 @@
             // Initial poll
             pollDeviceStatus();
         });
+
+    function adjustTemperature(delta) {
+        e.preventDefault();
+        
+        const tempSpan = document.querySelector('.current-temp');
+        let currentTemp = parseFloat(tempSpan.textContent);
+        currentTemp += delta;
+        // Round to nearest 0.5
+        currentTemp = Math.round(currentTemp * 2) / 2;
+        tempSpan.textContent = currentTemp.toFixed(1) + '°C';
+        
+        // Here you would also want to send this new temperature to your backend
+        const deviceId = 'AC1518D6640C';
+        const channel = '25';
+        fetch(`//127.0.0.1/ui/update.php?deviceId=${deviceId}&channel=${channel}&temperature=${currentTemp}`)
+            .then(response => response.json())
+            .then(data => console.log('Temperature updated:', data))
+            .catch(error => console.error('Error updating temperature:', error));
+    }
+
     </script>
 </body>
 
