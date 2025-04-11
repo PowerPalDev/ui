@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Efficiency Calculator</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Hide spinner buttons for number inputs */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Battery Wear Calculator</h2>
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <label for="scenario" class="form-label">Battery</label>
+                <select class="form-select" id="scenario" onchange="changeBattery()">
+                    <option value="1">Li Ion 1</option>
+                    <option value="2">LifePo 1</option>
+                    <option value="3">Li Ion 2</option>
+                    <option value="4">LifePo 2</option>
+                </select>
+            </div>
+        </div>
+
+        <form id="wearForm">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Battery Parameters</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label for="batteryEfficiency" class="form-label">Efficiency</label>
+                                <input type="number" class="form-control text-end" id="batteryEfficiency" value="0.93" step="0.01">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+</body>
+</html>
