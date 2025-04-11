@@ -431,7 +431,7 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
                                         }
 
                                         // Handle dimmable devices
-                                        if (deviceData.isDimmable) {
+                                        if (deviceData.isDimmable > 0) {
                                             const dutyReadingElement = card.querySelector('.dutyReading');
                                             dutyReadingElement.innerHTML = `<i class="fa-regular fa-lightbulb"></i> ${deviceData.duty}%`;
                                             

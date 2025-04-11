@@ -333,6 +333,8 @@ html, body {
     display: flex;
     flex-direction: column;
     gap: 0;  /* Remove the gap between elements */
+    left: -13px;
+    position: relative;
 }
 
 .metric {
