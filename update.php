@@ -32,9 +32,27 @@ $mqtt->connect($connectionSettings);
 //127.0.0.1/ui/update.php?deviceId=${deviceId}&channel=${channel}&state=${state}
 $deviceId = $_GET['deviceId'];
 $channel = $_GET['channel'];
-$state = $_GET['state'];
+$state = null;
+$duty = null;
+$temperature = null;
+if(isset($_GET['state'])){
+    $state = $_GET['state'];
+}
+if(isset($_GET['duty'])){
+    $duty = $_GET['duty'];
+}
+if(isset($_GET['temperature'])){
+    $temperature = $_GET['temperature'];
+}
 $topic = "/user/roy/$deviceId";
-$message = "$channel:state:$state";
-$mqtt->publish($topic, $message);
+if($state != null){
+    $message = "$channel:state:$state";
+    $mqtt->publish($topic, $message);
+}
+if($duty != null){
+    $d = $duty * 10;
+    $message = "$channel:pwm:$d";
+    $mqtt->publish($topic, $message);
+}
 
 echo "Device $deviceId channel $channel turned $state";

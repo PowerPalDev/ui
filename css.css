@@ -566,3 +566,50 @@ body {
     border-bottom: 1px solid darkgray;
     padding-bottom: 4px;
 }
+
+.slider-container {
+    width: 85%;
+    padding: 2px 0;
+}
+
+.custom-slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--color-green-light);
+    outline: none;
+    opacity: 0.7;
+    transition: opacity .2s;
+}
+
+.custom-slider:hover {
+    opacity: 1;
+}
+
+.custom-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    cursor: pointer;
+    border: 2px solid var(--color-green-faint);
+}
+
+.custom-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    cursor: pointer;
+    border: 2px solid var(--color-green-faint);
+}
+
+.slider-value {
+    text-align: center;
+    color: var(--color-green-faint);
+    margin-top: 8px;
+    font-size: 14px;
+}

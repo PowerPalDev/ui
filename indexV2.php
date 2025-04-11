@@ -54,22 +54,17 @@
                                     <div class="metric">
                                         <table class="metric-table">
                                             <tr>
-                                                <td class="metric-cell"><i class="fa-solid fa-bolt"></i> 3.1 W</td>
-                                                <td class="metric-cell"><i class="fa-regular fa-lightbulb"></i> 90 %</td>
-                                            </tr>
-                                            <tr>
+                                                <td><i class="fa-solid fa-bolt"></i> 3.1 W</td>
                                                 <td colspan="2">
-                                                    <div class="temperature-controls">
-                                                        <button class="temp-button" onclick="adjustTemperature(event, -0.5)">
-                                                            <i class="fas fa-minus"></i>
-                                                        </button>
-                                                        <span class="current-temp">21.5°C</span>
-                                                        <button class="temp-button" onclick="adjustTemperature(event, 0.5)">
-                                                            <i class="fas fa-plus"></i>
-                                                        </button>
+                                                    <div class="slider-container">
+                                                        <input type="range" class="custom-slider" min="0" max="100" value="50">
+                                                        <span class="slider-value">50%</span>
                                                     </div>
                                                 </td>
+
+                                                
                                             </tr>
+                                            
                                         </table>
                                     </div>
                                 </div>
@@ -98,7 +93,7 @@
                                                 <td class="metric-cell"><i class="fa-solid fa-temperature-half"></i> 22°C</td>
                                             </tr>
                                             <tr>
-                                                <td colspan="2">
+                                            <td colspan="2">
                                                     <div class="temperature-controls">
                                                         <button class="temp-button" onclick="adjustTemperature(event, -0.5)">
                                                             <i class="fas fa-minus"></i>
@@ -447,27 +442,45 @@
             
             // Initial poll
             //pollDeviceStatus();
+
+            // Add this to your existing DOMContentLoaded event listener
+            const sliders = document.querySelectorAll('.custom-slider');
+            sliders.forEach(slider => {
+                const valueDisplay = slider.nextElementSibling;
+                
+
+                slider.addEventListener('input', function(e) {
+                    // Debounce the slider input to prevent too many requests
+                    if (this.debounceTimeout) {
+                        clearTimeout(this.debounceTimeout);
+                    }
+                    
+                    // Update the display immediately for responsive UI
+                    const currentValue = e.target.value;
+                    valueDisplay.textContent = currentValue + '%';
+                    
+                    // Set a timeout to actually send the request after user stops sliding
+                    this.debounceTimeout = setTimeout(() => {
+                        // Get the device info from the closest device card
+                        const deviceCard = slider.closest('.device-card');
+                        const deviceId = deviceCard.getAttribute('device');
+                        const channel = deviceCard.getAttribute('channel');
+                        
+                        // Send the update to the server
+                        fetch(`//127.0.0.1/ui/update.php?deviceId=${deviceId}&channel=${channel}&duty=${currentValue}`)
+                            .then(response => response.json())
+                            .then(data => console.log('Duty updated:', data))
+                            .catch(error => console.error('Error updating duty:', error));
+                    }, 300); // 300ms debounce delay
+                });
+
+                
+                // Prevent the card click event when interacting with the slider
+                slider.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            });
         });
-
-    function adjustTemperature(e, delta) {
-        e.stopPropagation(); // Prevent event bubbling
-        
-        const tempSpan = document.querySelector('.current-temp');
-        let currentTemp = parseFloat(tempSpan.textContent);
-        currentTemp += delta;
-        // Round to nearest 0.5
-        currentTemp = Math.round(currentTemp * 2) / 2;
-        tempSpan.textContent = currentTemp.toFixed(1) + '°C';
-        
-        // Here you would also want to send this new temperature to your backend
-        const deviceId = 'AC1518D6640C';
-        const channel = '25';
-        fetch(`//127.0.0.1/ui/update.php?deviceId=${deviceId}&channel=${channel}&temperature=${currentTemp}`)
-            .then(response => response.json())
-            .then(data => console.log('Temperature updated:', data))
-            .catch(error => console.error('Error updating temperature:', error));
-    }
-
     </script>
 </body>
 
