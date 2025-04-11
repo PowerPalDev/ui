@@ -58,7 +58,7 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
                                             <tr class="metric-row">
                                                 <td class="powerReading"></td>
                                                 <td class="dutyReading"></td>
-                                                <td></td>
+                                                <td class="hideOnMobile"></td>
                                             </tr>
                                             <tr class="desktop-slider">
                                                 <td colspan="3">

@@ -346,6 +346,7 @@ html, body {
     white-space: nowrap;
     font-size: 14px;
     margin: 0;  /* Remove margin */
+    width: 95%;
 }
 
 /* Ensure device name is white */
@@ -588,9 +589,18 @@ body {
     .mobile-slider {
         display: none;
     }
+    .hideOnMobile {
+        display: block;
+    }
 }
 @media (max-width: 1023.98px) {
+    .metric{
+        width: 100%;
+    }
     .desktop-slider {
+        display: none;
+    }
+    .hideOnMobile {
         display: none;
     }
     .mobile-slider {
