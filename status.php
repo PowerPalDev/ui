@@ -1,13 +1,8 @@
 <?php
+require_once 'function.php';
 header('Content-Type: application/json');
 
-// Database connection
-$db = new mysqli('127.0.0.1', 'roy', 'roy', 'dsTest1');
-
-if ($db->connect_error) {
-    die(json_encode(['error' => 'Database connection failed: ' . $db->connect_error]));
-}
-
+$db = DB();
 // Query to get all channels
 $query = "SELECT * FROM channel";
 $result = $db->query($query);
