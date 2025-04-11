@@ -57,12 +57,13 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
                                         <table class="metric-table">
                                             <tr>
                                                 <td><i class="fa-solid fa-bolt"></i> 3.1 W</td>
+                                                <td><i class="fa-solid fa-lightbulb"></i> <span class="slider-value slider-value-AC1518D6640C-33">50%</span></td>
                                             </tr>
-                                            <tr>
+                                            <tr class="desktop-slider">
                                             <td colspan="2">
                                                     <div class="slider-container">
-                                                        <input type="range" class="custom-slider" min="0" max="100" value="50">
-                                                        <span class="slider-value">50%</span>
+                                                        <input type="range" class="custom-slider" min="0" max="100" value="50"  device="AC1518D6640C" channel="33">
+                                                        <span class="slider-value slider-value-AC1518D6640C-33">50%</span>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -75,6 +76,11 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
                                     </button>
                                 </div>
                             </div>
+                            <div class="mobile-slider">
+                                    <div class="slider-container">
+                                        <input type="range" class="custom-slider" min="0" max="100" value="50"  device="AC1518D6640C" channel="33">
+                                    </div>
+                                </div>
                         </div>
                     </div>
 
@@ -448,9 +454,6 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
             // Add this to your existing DOMContentLoaded event listener
             const sliders = document.querySelectorAll('.custom-slider');
             sliders.forEach(slider => {
-                const valueDisplay = slider.nextElementSibling;
-                
-
                 slider.addEventListener('input', function(e) {
                     // Debounce the slider input to prevent too many requests
                     if (this.debounceTimeout) {
@@ -459,14 +462,17 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
                     
                     // Update the display immediately for responsive UI
                     const currentValue = e.target.value;
-                    valueDisplay.textContent = currentValue + '%';
+                    const deviceId = slider.getAttribute('device');
+                    const channel = slider.getAttribute('channel');
+
+                    const valueDisplay = document.getElementsByClassName(`slider-value-${deviceId}-${channel}`);
+                    for (let i = 0; i < valueDisplay.length; i++) {
+                        valueDisplay[i].textContent = currentValue + '%';
+                    }
                     
                     // Set a timeout to actually send the request after user stops sliding
                     this.debounceTimeout = setTimeout(() => {
-                        // Get the device info from the closest device card
-                        const deviceCard = slider.closest('.device-card');
-                        const deviceId = deviceCard.getAttribute('device');
-                        const channel = deviceCard.getAttribute('channel');
+
                         
                         // Send the update to the server
                         fetch(`${backendAddress}ui/update.php?deviceId=${deviceId}&channel=${channel}&duty=${currentValue}`)
