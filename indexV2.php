@@ -52,7 +52,7 @@
                                 <div class="device-info">
                                     <span class="card-title">Device Name</span>
                                     <div class="metric">
-                                        3.1 W <i class="fa-solid fa-bolt"></i> 231.5 V
+                                        3.1 W <i class="fa-solid fa-bolt"></i> 231.5 V <i class="fa-regular fa-lightbulb"></i> 90%
                                     </div>
                                 </div>
                                 <div class="right">
@@ -73,16 +73,25 @@
                                 <div class="device-info">
                                     <span class="card-title">Heat Pump</span>
                                     <div class="metric">
-                                        3.1 W <i class="fa-solid fa-bolt"></i> 231.5 V <i class="fa-regular fa-lightbulb"></i> 90%
-                                    </div>
-                                    <div class="temperature-controls">
-                                        <button class="temp-button" onclick="adjustTemperature(-0.5)">
-                                            <i class="fas fa-minus"></i>
-                                        </button>
-                                        <span class="current-temp">21.5°C</span>
-                                        <button class="temp-button" onclick="adjustTemperature(0.5)">
-                                            <i class="fas fa-plus"></i>
-                                        </button>
+                                        <table>
+                                            <tr>
+                                                <td><i class="fa-solid fa-bolt"></i> 3.1 W</td>
+                                                <td><i class="fa-solid fa-temperature-half"></i> 22°C</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">
+                                                    <div class="temperature-controls">
+                                                        <button class="temp-button" onclick="adjustTemperature(event, -0.5)">
+                                                            <i class="fas fa-minus"></i>
+                                                        </button>
+                                                        <span class="current-temp">21.5°C</span>
+                                                        <button class="temp-button" onclick="adjustTemperature(event, 0.5)">
+                                                            <i class="fas fa-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
                                     </div>
                                 </div>
                                 <div class="right">
@@ -415,14 +424,14 @@
             }
 
             // Poll every 2 seconds
-            setInterval(pollDeviceStatus, 2000);
+            //setInterval(pollDeviceStatus, 2000);
             
             // Initial poll
-            pollDeviceStatus();
+            //pollDeviceStatus();
         });
 
-    function adjustTemperature(delta) {
-        e.preventDefault();
+    function adjustTemperature(e, delta) {
+        e.stopPropagation(); // Prevent event bubbling
         
         const tempSpan = document.querySelector('.current-temp');
         let currentTemp = parseFloat(tempSpan.textContent);

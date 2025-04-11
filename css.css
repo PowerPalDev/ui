@@ -329,6 +329,12 @@ html, body {
     /* White text for all content */
 }
 
+.device-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0;  /* Remove the gap between elements */
+}
+
 .metric {
     background-color: #242527;
     padding: 8px 12px;
@@ -339,7 +345,7 @@ html, body {
     width: fit-content;
     white-space: nowrap;
     font-size: 14px;
-    margin-top: -5px;
+    margin: 0;  /* Remove margin */
 }
 
 /* Ensure device name is white */
@@ -503,12 +509,6 @@ html, body {
     max-height: 60px;
 }
 
-.device-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
 .right {
     justify-self: end;
 }
@@ -527,31 +527,32 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 8px;
-    padding: 4px 0;
+    padding: 8px 12px;
+    background-color: #242527;
+    border-radius: 0 0 18px 18px;  /* Round only bottom corners */
+    width: fit-content;
+    white-space: nowrap;
+    font-size: 14px;
+    gap: 8px;
+    margin: 0;  /* Remove margin */
 }
 
 .temp-button {
     background: none;
-    border: 1px solid var(--color-green-light);
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--color-green-light);
-    cursor: pointer;
-    transition: all 0.2s ease;
 }
 
 .temp-button:hover {
-    background-color: var(--color-green-light);
-    color: var(--background-color);
+    opacity: 0.8;
 }
 
 .current-temp {
-    font-size: 1.2em;
+    color: white;
     font-weight: 500;
-    color: var(--text-color);
 }
