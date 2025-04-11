@@ -23,12 +23,14 @@ while ($row = $result->fetch_assoc()) {
     
     // Check if device is offline (more than 5 minutes since last update)
     $offlineStatus = false;
+    //*
     if (time() - $row['lastUpdate'] > 300) { // 5 minutes = 300 seconds
         $timeDiff = time() - $row['lastUpdate'];
         $hours = floor($timeDiff / 3600);
         $minutes = floor(($timeDiff % 3600) / 60);
         $offlineStatus = sprintf("%d:%02d", $hours, $minutes);
     }
+    //*/
 
     if ($row['state'] == 1) {
         $colorString = $row['color'];

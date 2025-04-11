@@ -31,8 +31,8 @@ $mqtt->connect($connectionSettings);
 // Get parameters from request
 $deviceId = $_GET['deviceId'];
 $channel = $_GET['channel'];
-$state = isset($_GET['state']) ? $_GET['state'] : null;
-$duty = isset($_GET['duty']) ? $_GET['duty'] : null;
+$state = null;
+$duty = null;
 $temperature = isset($_GET['temperature']) ? $_GET['temperature'] : null;
 
 // Prepare the base update SQL
@@ -40,35 +40,47 @@ $updateFields = [];
 $updateValues = [];
 $currentTime = time();
 
-if ($duty !== null) {
+if (isset($_GET['state'])) {
+    $state = $_GET['state'];
+    if ($state == 'on') {
+        $duty = 100;
+    } else {
+        $duty = 0;
+    }
+}
+
+if (isset($_GET['duty'])) {
+    $duty = $_GET['duty'];
     if ($duty > 100) {
         $duty = 100;
     }
     if ($duty < 0) {
         $duty = 0;
     }
+
     if ($duty == 0) {
-        $state = 0;
+        $state = 'off';
     } else {
-        $state = 1;
+        $state = 'on';
     }
-    $updateFields[] = "state = ?";
-    $updateValues[] = $state;
-    $updateFields[] = "duty = ?";
-    $updateValues[] = $duty;  // Convert to same scale as stored in DB
-    
+
+}
+
+// Add fields based on what was received
+if (isset($_GET['state'])) {  
+    $message = "$channel:state:$state";
+    $mqtt->publish("/user/roy/$deviceId", $message);
+}
+
+if (isset($_GET['duty'])) {
     $message = "$channel:pwm:" . ($duty * 10);
     $mqtt->publish("/user/roy/$deviceId", $message);
 }
 
-// Add fields based on what was received
-if (isset($_GET['state'])) {
-    $updateFields[] = "state = ?";
-    $updateValues[] = ($state === 'on') ? 1 : 0;
-    
-    $message = "$channel:state:$state";
-    $mqtt->publish("/user/roy/$deviceId", $message);
-}
+$updateFields[] = "state = ?";
+$updateValues[] = ($state === 'on') ? 1 : 0;
+$updateFields[] = "duty = ?";
+$updateValues[] = $duty;  // Convert to same scale as stored in DB
 
 if ($temperature !== null) {
     $updateFields[] = "targetTemp = ?";

@@ -55,12 +55,13 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
                                     <span class="card-title">Street Illumination</span>
                                     <div class="metric">
                                         <table class="metric-table">
-                                            <tr>
-                                                <td><i class="fa-solid fa-bolt"></i> 3.1 W</td>
-                                                <td><i class="fa-solid fa-lightbulb"></i> <span class="slider-value slider-value-AC1518D6640C-33">50%</span></td>
+                                            <tr class="metric-row">
+                                                <td class="powerReading"></td>
+                                                <td class="dutyReading"></td>
+                                                <td></td>
                                             </tr>
                                             <tr class="desktop-slider">
-                                            <td colspan="2">
+                                                <td colspan="3">
                                                     <div class="slider-container">
                                                         <input type="range" class="custom-slider" min="0" max="100" value="50"  device="AC1518D6640C" channel="33">
                                                     </div>
@@ -396,7 +397,7 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
 
             // Add polling function
             function pollDeviceStatus() {
-                fetch('//127.0.0.1/ui/status.php')
+                fetch(backendAddress + 'ui/status.php')
                     .then(response => response.json())
                     .then(data => {
                         // Iterate through each device card
@@ -410,47 +411,46 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
                             if (data[deviceId] && data[deviceId][channel]) {
                                 const deviceData = data[deviceId][channel];
 
-                                // Update power button color
-                                if (powerButton) {
-                                    // Remove all existing color classes
-                                    powerButton.classList.remove('blue-border', 'green-border', 'grey-border', 'orange-border', 'violet-border');
-                                    powerButton.querySelector('i').classList.remove('blue-icon', 'green-icon', 'grey-icon', 'orange-icon', 'violet-icon');
-                                    
-                                    // Add new color class
-                                    powerButton.classList.add(`${deviceData.color}-border`);
-                                    powerButton.querySelector('i').classList.add(`${deviceData.color}-icon`);
-                                }
-
-                                // Handle dimmable devices
-                                if (deviceData.isDimmable) {
-                                    // Update all slider value displays for this device/channel
-                                    const sliderValueDisplays = document.getElementsByClassName(`slider-value-${deviceId}-${channel}`);
-                                    for (let display of sliderValueDisplays) {
-                                        display.textContent = `${deviceData.duty}%`;
-                                    }
-
-                                    // Update all sliders for this device/channel
-                                    const sliders = document.querySelectorAll(`.custom-slider[device="${deviceId}"][channel="${channel}"]`);
-                                    sliders.forEach(slider => {
-                                        slider.value = deviceData.duty;
-                                    });
-                                }
-
                                 // Update metric information
                                 if (metricDiv) {
                                     if (deviceData.offline) {
-                                        // Show offline status if it's offline
-                                        metricDiv.innerHTML = `<i class="fa-solid fa-link-slash red-icon"></i> offline ${deviceData.offline}`;
+                                        // Find and update power reading if it exists
+                                        const powerReadingElement = card.querySelector('.powerReading');
+                                        powerReadingElement.innerHTML = `<i class="fa-solid fa-link-slash red-icon"></i> offline ${deviceData.offline}`;
+                                        
                                     } else {
-                                        // Construct metric content
-                                        let metricContent = `${deviceData.power}W <i class="fa-solid fa-bolt"></i>`;
-                                        
-                                        // Add duty information if present and greater than 0
-                                        if (deviceData.duty && deviceData.duty > 0) {
-                                            metricContent += ` <i class="fa-regular fa-lightbulb"></i> ${deviceData.duty}%`;
+                                        // Update power button color
+                                        if (powerButton) {
+                                            // Remove all existing color classes
+                                            powerButton.classList.remove('blue-border', 'green-border', 'grey-border', 'orange-border', 'violet-border');
+                                            powerButton.querySelector('i').classList.remove('blue-icon', 'green-icon', 'grey-icon', 'orange-icon', 'violet-icon');
+                                            
+                                            // Add new color class
+                                            powerButton.classList.add(`${deviceData.color}-border`);
+                                            powerButton.querySelector('i').classList.add(`${deviceData.color}-icon`);
                                         }
+
+                                        // Handle dimmable devices
+                                        if (deviceData.isDimmable) {
+                                            const dutyReadingElement = card.querySelector('.dutyReading');
+                                            dutyReadingElement.innerHTML = `<i class="fa-regular fa-lightbulb"></i> ${deviceData.duty}%`;
+                                            
+                                            // Update all slider value displays for this device/channel
+                                            const sliderValueDisplays = document.getElementsByClassName(`slider-value-${deviceId}-${channel}`);
+                                            for (let display of sliderValueDisplays) {
+                                                display.textContent = `${deviceData.duty}%`;
+                                            }
+
+                                            // Update all sliders for this device/channel
+                                            const sliders = document.querySelectorAll(`.custom-slider[device="${deviceId}"][channel="${channel}"]`);
+                                            sliders.forEach(slider => {
+                                                slider.value = deviceData.duty;
+                                            });
+                                        }
+
+                                        const powerReadingElement = card.querySelector('.powerReading');
+                                        powerReadingElement.innerHTML = `<i class="fa-solid fa-bolt"></i> ${deviceData.power}W `;                                     
                                         
-                                        metricDiv.innerHTML = metricContent;
                                     }
                                 }
                             }
@@ -460,10 +460,10 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
             }
 
             // Poll every 2 seconds
-            setInterval(pollDeviceStatus, 2000);
+            setInterval(pollDeviceStatus, 500);
             
             // Initial poll
-            pollDeviceStatus();
+            //pollDeviceStatus();
 
             // Add this to your existing DOMContentLoaded event listener
             const sliders = document.querySelectorAll('.custom-slider');

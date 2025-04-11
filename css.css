@@ -558,13 +558,17 @@ body {
 }
 
 .metric-table {
-    border-collapse: collapse;
     width: 100%;
+    table-layout: fixed;
 }
 
-.metric-cell {
-    border-bottom: 1px solid darkgray;
-    padding-bottom: 4px;
+.metric-table td {
+    width: 33.33%;
+}
+
+/* For the colspan cell */
+.desktop-slider td {
+    width: 100%;
 }
 
 .slider-container {
@@ -576,7 +580,7 @@ body {
 
 @media (min-width: 1023.98px) {
     .slider-container {
-        width: 125%;
+        width: 300%;
     }
     .desktop-slider {
         display: block;
@@ -628,4 +632,9 @@ body {
     background: var(--color-primary);
     cursor: pointer;
     border: 2px solid var(--color-green-faint);
+}
+
+.powerReading{
+    padding-right: 20px;
+    width: 100px;
 }
