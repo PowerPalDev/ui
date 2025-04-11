@@ -50,9 +50,27 @@
                                     <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo">
                                 </div>
                                 <div class="device-info">
-                                    <span class="card-title">Device Name</span>
+                                    <span class="card-title">Street Illumination</span>
                                     <div class="metric">
-                                        3.1 W <i class="fa-solid fa-bolt"></i> 231.5 V <i class="fa-regular fa-lightbulb"></i> 90%
+                                        <table class="metric-table">
+                                            <tr>
+                                                <td class="metric-cell"><i class="fa-solid fa-bolt"></i> 3.1 W</td>
+                                                <td class="metric-cell"><i class="fa-regular fa-lightbulb"></i> 90 %</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">
+                                                    <div class="temperature-controls">
+                                                        <button class="temp-button" onclick="adjustTemperature(event, -0.5)">
+                                                            <i class="fas fa-minus"></i>
+                                                        </button>
+                                                        <span class="current-temp">21.5°C</span>
+                                                        <button class="temp-button" onclick="adjustTemperature(event, 0.5)">
+                                                            <i class="fas fa-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
                                     </div>
                                 </div>
                                 <div class="right">
