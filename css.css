@@ -568,13 +568,16 @@ body {
 }
 
 .slider-container {
-    width: 85%;
-    margin-left: 5px;
+    width: 90%;
+    margin: auto;
     display: flex;  /* Add this */
     align-items: center;  /* Add this */
-    gap: 10px;  /* Add this */
 }
+
 @media (min-width: 1023.98px) {
+    .slider-container {
+        width: 125%;
+    }
     .desktop-slider {
         display: block;
     }
@@ -625,11 +628,4 @@ body {
     background: var(--color-primary);
     cursor: pointer;
     border: 2px solid var(--color-green-faint);
-}
-
-.slider-value {
-    text-align: center;
-    color: var(--color-green-faint);
-    margin-top: 8px;
-    font-size: 14px;
 }

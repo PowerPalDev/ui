@@ -63,7 +63,6 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
                                             <td colspan="2">
                                                     <div class="slider-container">
                                                         <input type="range" class="custom-slider" min="0" max="100" value="50"  device="AC1518D6640C" channel="33">
-                                                        <span class="slider-value slider-value-AC1518D6640C-33">50%</span>
                                                     </div>
                                                 </td>
                                             </tr>
