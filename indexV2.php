@@ -57,16 +57,15 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
                                         <table class="metric-table">
                                             <tr>
                                                 <td><i class="fa-solid fa-bolt"></i> 3.1 W</td>
-                                                <td colspan="2">
+                                            </tr>
+                                            <tr>
+                                            <td colspan="2">
                                                     <div class="slider-container">
                                                         <input type="range" class="custom-slider" min="0" max="100" value="50">
                                                         <span class="slider-value">50%</span>
                                                     </div>
                                                 </td>
-
-                                                
                                             </tr>
-                                            
                                         </table>
                                     </div>
                                 </div>
