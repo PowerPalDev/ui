@@ -58,10 +58,9 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
                                             <tr class="metric-row">
                                                 <td class="powerReading"></td>
                                                 <td class="dutyReading"></td>
-                                                <td class="hideOnMobile"></td>
                                             </tr>
                                             <tr class="desktop-slider">
-                                                <td colspan="3">
+                                                <td colspan="2">
                                                     <div class="slider-container">
                                                         <input type="range" class="custom-slider" min="0" max="100" value="50"  device="AC1518D6640C" channel="33">
                                                     </div>
@@ -135,7 +134,13 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
                                         <i class="fa-solid fa-link-slash red-icon"></i> offline 1:45
                                     </div>
                                 </div>
-                            </div>
+                            
+                            <div class="right">
+                                    <button class="power-button grey-border" device="AC1518D6640C" channel="00">
+                                        <i class="fa fa-power-off grey-icon"></i>
+                                    </button>
+                                </div>
+                                </div>
                         </div>
                     </div>
 

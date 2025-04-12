@@ -335,6 +335,7 @@ html, body {
     gap: 0;  /* Remove the gap between elements */
     left: -13px;
     position: relative;
+    width: 110%;
 }
 
 .metric {
@@ -533,7 +534,6 @@ body {
     padding: 4px 4px;
     background-color: #242527;
     border-radius: 0 0 18px 18px;  /* Round only bottom corners */
-    width: fit-content;
     white-space: nowrap;
     font-size: 14px;
     gap: 8px;
@@ -567,6 +567,7 @@ body {
 
 .metric-table td {
     width: 33.33%;
+    text-align: center;
 }
 
 /* For the colspan cell */
@@ -583,7 +584,7 @@ body {
 
 @media (min-width: 1023.98px) {
     .slider-container {
-        width: 300%;
+        width: 200%;
     }
     .desktop-slider {
         display: block;
@@ -644,9 +645,4 @@ body {
     background: var(--color-primary);
     cursor: pointer;
     border: 2px solid var(--color-green-faint);
-}
-
-.powerReading{
-    padding-right: 20px;
-    width: 100px;
 }
