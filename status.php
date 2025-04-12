@@ -45,7 +45,7 @@ while ($row = $result->fetch_assoc()) {
     }
 
     if($row['isThermostat'] == 1) {
-        $currentTemp = number_format($row['currentTemp'], 1);
+        $currentTemp = number_format($row['currentTemp'], 2);
         $targetTemp = number_format($row['targetTemp'], 1);
     } else {
         $currentTemp = 0;

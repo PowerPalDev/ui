@@ -157,8 +157,8 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
                                     </div>
                                 </div>
                                 <div class="right">
-                                    <button class="power-button orange-border" device="AC1518D6640C" channel="26">
-                                        <i class="fa fa-power-off orange-icon"></i>
+                                    <button class="power-button green-border" device="AC1518D6640C" channel="26">
+                                        <i class="fa fa-power-off green-icon"></i>
                                     </button>
                                 </div>
                             </div>
