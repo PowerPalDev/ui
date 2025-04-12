@@ -1,6 +1,10 @@
 <?php
 
-function DB(){
+use PhpMqtt\Client\MqttClient;
+use PhpMqtt\Client\ConnectionSettings;
+
+function DB()
+{
     static $db;
     if ($db === null) {
         // Database connection
@@ -13,5 +17,30 @@ function DB(){
     return $db;
 }
 
+function mqtt()
+{
+    static $mqtt;
+    if ($mqtt === null) {
+        // MQTT connection parameters
+        $server = 'seisho.us';
+        $port = 1883;
+        $clientId = 'powerpal_php_backend_1';
+        $username = null;
+        $password = null;
+        $clean_session = true;
+        $mqtt_version = MqttClient::MQTT_3_1_1;
 
+        // Create MQTT connection settings
+        $connectionSettings = (new ConnectionSettings)
+            ->setUsername($username)
+            ->setPassword($password)
+            ->setKeepAliveInterval(60);
 
+        // Create MQTT client
+        $mqtt = new MqttClient($server, $port, $clientId);
+
+        // Connect to the MQTT broker
+        $mqtt->connect($connectionSettings);
+    }
+    return $mqtt;
+}

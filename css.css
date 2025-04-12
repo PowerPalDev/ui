@@ -349,7 +349,7 @@ html, body {
     white-space: nowrap;
     font-size: 14px;
     margin: 0;  /* Remove margin */
-    width: 95%;
+    width: 90%;
 }
 
 /* Ensure device name is white */
@@ -555,7 +555,7 @@ body {
     opacity: 0.8;
 }
 
-.current-temp {
+.targetTemp {
     color: white;
     font-weight: 500;
 }

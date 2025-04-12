@@ -42,7 +42,7 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
             </div>
 
             <!-- Main content area -->
-            <main class="col p-4">
+            <main class="col p-2">
                 <h1 class="sectionTitle mb-4">Devices</h1>
                 <div class="row g-2 cards-grid">
                     <div class="col-12 col-md card-container">
@@ -104,7 +104,7 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
                                                         <button class="temp-button" onclick="adjustTemperature(event, -0.5)">
                                                             <i class="fas fa-minus"></i>
                                                         </button>
-                                                        <span class="current-temp">21.5°C</span>
+                                                        <span class="targetTemp">21.5°C</span>
                                                         <button class="temp-button" onclick="adjustTemperature(event, 0.5)">
                                                             <i class="fas fa-plus"></i>
                                                         </button>
@@ -400,8 +400,13 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
                 });
             });
 
+            window.pausePolling = false;
+
             // Add polling function
             function pollDeviceStatus() {
+                if (window.pausePolling) {
+                    return;
+                }
                 fetch(backendAddress + 'ui/status.php')
                     .then(response => response.json())
                     .then(data => {
@@ -433,6 +438,13 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
                                             // Add new color class
                                             powerButton.classList.add(`${deviceData.color}-border`);
                                             powerButton.querySelector('i').classList.add(`${deviceData.color}-icon`);
+                                        }
+
+                                        if (deviceData.isThermostat > 0) {
+                                            const tempReadingElement = card.querySelector('.temperatureReading');
+                                            tempReadingElement.innerHTML = `<i class="fa-solid fa-temperature-half"></i> ${deviceData.currentTemp}°C`;
+                                            const targetTempElement = card.querySelector('.targetTemp');
+                                            targetTempElement.innerHTML = `${deviceData.targetTemp}°C`;
                                         }
 
                                         // Handle dimmable devices
@@ -545,7 +557,14 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
                                     console.log('Polling resumed after duty update');
                                 }
                             })
-                            .catch(error => console.error('Error updating duty:', error));
+                            .catch(error => {
+                                console.error('Error updating duty:', error);
+                                // Restart polling also in case of error
+                                if (!window.pollInterval && !window.isDragging) {
+                                    window.pollInterval = setInterval(pollDeviceStatus, 500);
+                                    console.log('Polling resumed after duty update');
+                                }
+                            });
                     }, 300); // 300ms debounce delay
                 });
 
@@ -555,26 +574,48 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
                     e.stopPropagation();
                 });
             });
-        });
 
-    function adjustTemperature(e, delta) {
-        e.stopPropagation(); // Prevent event bubbling
-        
-        const tempSpan = document.querySelector('.current-temp');
-        let currentTemp = parseFloat(tempSpan.textContent);
-        currentTemp += delta;
-        // Round to nearest 0.5
-        currentTemp = Math.round(currentTemp * 2) / 2;
-        tempSpan.textContent = currentTemp.toFixed(1) + '°C';
-        
-        // Here you would also want to send this new temperature to your backend
-        const deviceId = 'AC1518D6640C';
-        const channel = '25';
-        fetch(`//127.0.0.1/ui/update.php?deviceId=${deviceId}&channel=${channel}&temperature=${currentTemp}`)
-            .then(response => response.json())
-            .then(data => console.log('Temperature updated:', data))
-            .catch(error => console.error('Error updating temperature:', error));
-    }   
+            // Move adjustTemperature function inside DOMContentLoaded
+            window.adjustTemperature = function(e, delta) {
+                e.stopPropagation(); // Prevent event bubbling
+                
+                const tempSpan = document.querySelector('.targetTemp');
+                let targetTemp = parseFloat(tempSpan.textContent);
+                targetTemp += delta;
+                // Round to nearest 0.5
+                targetTemp = Math.round(targetTemp * 2) / 2;
+                tempSpan.textContent = targetTemp.toFixed(1) + '°C';
+                
+                const deviceId = 'AC1518D6640C';
+                const channel = '25';
+
+                window.pausePolling = true;
+                if (window.pollInterval) {
+                    clearInterval(window.pollInterval);
+                    window.pollInterval = null;
+                }
+                fetch(`${backendAddress}ui/update.php?deviceId=${deviceId}&channel=${channel}&temperature=${targetTemp}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Temperature updated:', data);
+                        window.pausePolling = false;
+                        // Restart polling after update is complete
+                        if (!window.pollInterval && !window.isDragging) {
+                            window.pollInterval = setInterval(pollDeviceStatus, 500);
+                            console.log('Polling resumed after duty update');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error updating temperature:', error);
+                        window.pausePolling = false;
+                        // Restart polling also in case of error
+                        if (!window.pollInterval && !window.isDragging) {
+                            window.pollInterval = setInterval(pollDeviceStatus, 500);
+                            console.log('Polling resumed after duty update');
+                        }
+                    });
+            };
+        });
     </script>
 </body>
 

@@ -4,29 +4,6 @@ require_once 'function.php';
 
 $db = DB();
 
-use PhpMqtt\Client\MqttClient;
-use PhpMqtt\Client\ConnectionSettings;
-
-// MQTT connection parameters
-$server = 'seisho.us';
-$port = 1883;
-$clientId = 'powerpal_php_backend_1';
-$username = null;
-$password = null;
-$clean_session = true;
-$mqtt_version = MqttClient::MQTT_3_1_1;
-
-// Create MQTT connection settings
-$connectionSettings = (new ConnectionSettings)
-    ->setUsername($username)
-    ->setPassword($password)
-    ->setKeepAliveInterval(60);
-
-// Create MQTT client
-$mqtt = new MqttClient($server, $port, $clientId);
-
-// Connect to the MQTT broker
-$mqtt->connect($connectionSettings);
 
 // Get parameters from request
 $deviceId = $_GET['deviceId'];
@@ -69,25 +46,32 @@ if (isset($_GET['duty'])) {
 // Add fields based on what was received
 if (isset($_GET['state'])) {  
     $message = "$channel:state:$state";
-    $mqtt->publish("/user/roy/$deviceId", $message);
+    mqtt()->publish("/user/roy/$deviceId", $message);
 }
 
 if (isset($_GET['duty'])) {
     $message = "$channel:pwm:" . ($duty * 10);
-    $mqtt->publish("/user/roy/$deviceId", $message);
+    mqtt()->publish("/user/roy/$deviceId", $message);
 }
 
-$updateFields[] = "state = ?";
-$updateValues[] = ($state === 'on') ? 1 : 0;
-$updateFields[] = "duty = ?";
-$updateValues[] = $duty;  // Convert to same scale as stored in DB
+if($duty) {
+    $updateFields[] = "duty = ?";
+    $updateValues[] = $duty;  // Convert to same scale as stored in DB
+}
+
+if($state) {
+    $updateFields[] = "state = ?";
+    $updateValues[] = ($state === 'on') ? 1 : 0;
+}
+
 
 if ($temperature !== null) {
+    //the device is not really a thermostat, so we only update the db
     $updateFields[] = "targetTemp = ?";
     $updateValues[] = $temperature;
     
-    $message = "$channel:temperature:$temperature";
-    $mqtt->publish("/user/roy/$deviceId", $message);
+    //$message = "$channel:temperature:$temperature";
+    //$mqtt->publish("/user/roy/$deviceId", $message);
 }
 
 // Always update lastUpdate time

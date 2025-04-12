@@ -23,7 +23,7 @@ while ($row = $result->fetch_assoc()) {
     
     // Check if device is offline (more than 5 minutes since last update)
     $offlineStatus = false;
-    //*
+    /*
     if (time() - $row['lastUpdate'] > 300) { // 5 minutes = 300 seconds
         $timeDiff = time() - $row['lastUpdate'];
         $hours = floor($timeDiff / 3600);
@@ -45,8 +45,8 @@ while ($row = $result->fetch_assoc()) {
     }
 
     if($row['isThermostat'] == 1) {
-        $currentTemp = $row['duty'];
-        $targetTemp = $row['targetTemp'];
+        $currentTemp = number_format($row['currentTemp'], 1);
+        $targetTemp = number_format($row['targetTemp'], 1);
     } else {
         $currentTemp = 0;
         $targetTemp = 0;
