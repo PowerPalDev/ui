@@ -129,7 +129,7 @@ if (count($updateFields) > 0) {
 }
 
 // Close connections
-$mqtt->disconnect();
+mqtt()->disconnect();
 
 // Send JSON response
 header('Content-Type: application/json');

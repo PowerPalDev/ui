@@ -7,7 +7,7 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bootstrap Layout</title>
+    <title>⚡ PowerPal</title>
     <!-- Bootstrap 5.3 CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -214,6 +214,7 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
             </main>
 
             <!-- Right info panel -->
+            <!--
             <div id="right-panel" class="col-md-3 col-lg-2 p-0">
                 <div style="height: 32px; background-color: #242527; position: relative; border-top-left-radius: 18px;">
                     <button type="button" class="panel-close" aria-label="Close"
@@ -231,6 +232,7 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
                     </div>
                 </div>
             </div>
+            -->
         </div>
     </div>
 
@@ -255,7 +257,8 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
             const rightPanel = document.getElementById('right-panel');
             const mainContent = document.querySelector('main');
             const closeButton = document.querySelector('.panel-close');
-            closeButton.addEventListener('click', togglePanel);
+
+            //closeButton.addEventListener('click', togglePanel);
 
             function togglePanel(deviceId, channel) {
                 rightPanel.classList.toggle('show');

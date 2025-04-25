@@ -33,7 +33,11 @@ function mqtt($reconnect = false)
             $connectionSettings = (new ConnectionSettings)
                 ->setUsername($username)
                 ->setPassword($password)
-                ->setKeepAliveInterval(60);
+                ->setConnectTimeout(connectTimeout: 10)
+                ->setReconnectAutomatically(true)
+                ->setMaxReconnectAttempts(5)
+                ->setDelayBetweenReconnectAttempts(2000) // 2 seconds between reconnect attempts
+                ->setKeepAliveInterval(10);
 
     if ($mqtt === null || $reconnect) {
 
