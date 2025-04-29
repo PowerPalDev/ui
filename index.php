@@ -159,43 +159,43 @@ $channels = $result->fetch_all(MYSQLI_ASSOC);
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             
-            const rightPanel = document.getElementById('right-panel');
-            const mainContent = document.querySelector('main');
-            const closeButton = document.querySelector('.panel-close');
+            //const rightPanel = document.getElementById('right-panel');
+            //const mainContent = document.querySelector('main');
+            //const closeButton = document.querySelector('.panel-close');
 
             //closeButton.addEventListener('click', togglePanel);
 
-            function togglePanel(deviceId, channel) {
-                rightPanel.classList.toggle('show');
-                if (window.innerWidth >= 768) {
-                    mainContent.classList.toggle('panel-visible');
-                }
-                updateRightPanelInfo(deviceId, channel);
-            }
+            // function togglePanel(deviceId, channel) {
+            //     rightPanel.classList.toggle('show');
+            //     if (window.innerWidth >= 768) {
+            //         mainContent.classList.toggle('panel-visible');
+            //     }
+            //     updateRightPanelInfo(deviceId, channel);
+            // }
 
-            function updateRightPanelInfo(deviceId, channel) {
-                // Check if deviceId and channel are provided
-                if (deviceId && channel) {
-                    // Make an AJAX GET request to fetch device information
-                    fetch(`${backendAddress}ui/info.php?deviceId=${deviceId}&channel=${channel}`)
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            console.log('Device info received:', data);
-                            // Here you can update the right panel with the received data
-                            // For example, update device name, status, and other information
-                        })
-                        .catch(error => {
-                            console.error('Error fetching device info:', error);
-                        });
-                } else {
-                    console.log('No device ID or channel provided for info panel');
-                }
-            }
+            // function updateRightPanelInfo(deviceId, channel) {
+            //     // Check if deviceId and channel are provided
+            //     if (deviceId && channel) {
+            //         // Make an AJAX GET request to fetch device information
+            //         fetch(`${backendAddress}ui/info.php?deviceId=${deviceId}&channel=${channel}`)
+            //             .then(response => {
+            //                 if (!response.ok) {
+            //                     throw new Error('Network response was not ok');
+            //                 }
+            //                 return response.json();
+            //             })
+            //             .then(data => {
+            //                 console.log('Device info received:', data);
+            //                 // Here you can update the right panel with the received data
+            //                 // For example, update device name, status, and other information
+            //             })
+            //             .catch(error => {
+            //                 console.error('Error fetching device info:', error);
+            //             });
+            //     } else {
+            //         console.log('No device ID or channel provided for info panel');
+            //     }
+            // }
             // Get all device cards
             const deviceCards = document.querySelectorAll('.device-card');
             /*

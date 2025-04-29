@@ -12,6 +12,14 @@ $state = null;
 $duty = null;
 $temperature = isset($_GET['temperature']) ? $_GET['temperature'] : null;
 
+//read from the db the current state of this row
+$query = "SELECT * FROM channel WHERE deviceId = ? AND channel = ?";
+$stmt = $db->prepare($query);
+$stmt->bind_param('ss', $deviceId, $channel);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
+
 // Prepare the base update SQL
 $updateFields = [];
 $updateValues = [];
@@ -43,12 +51,6 @@ if (isset($_GET['duty'])) {
 
 }
 
-// Add fields based on what was received
-if (isset($_GET['state'])) {  
-    $message = "$channel:state:$state";
-    mqtt()->publish("/user/roy/$deviceId", $message);
-}
-
 if (isset($_GET['duty'])) {
     $message = "$channel:pwm:" . ($duty * 10);
     mqtt()->publish("/user/roy/$deviceId", $message);
@@ -59,10 +61,12 @@ if($duty) {
     $updateValues[] = $duty;  // Convert to same scale as stored in DB
 }
 
+
 if($state) {
     $updateFields[] = "state = ?";
     $updateValues[] = ($state === 'on') ? 1 : 0;
 }
+$stateInt = $state === 'on' ? 1 : 0;
 
 
 if ($temperature !== null) {
@@ -127,9 +131,7 @@ if (count($updateFields) > 0) {
         'message' => "No update parameters provided"
     ];
 }
-
-// Close connections
-mqtt()->disconnect();
+$c = new Channel($deviceId, $row['channel'], $row['greenChannel'], $stateInt, $row['color']);
 
 // Send JSON response
 header('Content-Type: application/json');

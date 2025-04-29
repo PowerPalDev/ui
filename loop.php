@@ -27,79 +27,37 @@ function coolingOn(&$row)
     return $row;
 }
 
+$query = "SELECT * FROM channel";
+$result = $db->query($query);
+$channels = [];
+
+foreach($result as $row){
+    print_r($row);
+    $channels[$row['deviceId']][$row['channel']] = new Channel(
+        $row['deviceId'], 
+        $row['channel'],
+        $row['greenChannel'],
+        $row['state'],
+        $row['color']
+    );
+}
+
 while (true) {
     sleep(1);
     $query = "SELECT * FROM channel";
     $result = $db->query($query);
     while ($row = $result->fetch_assoc()) {
         try {
-            if ($row['type'] == "thermostat") {
-                $deviceId = $row['deviceId'];
-                $topic = "/user/roy/$deviceId";
-                $channel = $row['channel'];
-                $color = $row['color'];
-                $state = $row['state'];
-                switch ($color) {
-                    case 'blue':
-                        $mqttChannel = $row['channel'];
-                        mqtt()->publish($topic, $message = "{$row['greenChannel']}:state:off");
-                        mqtt()->publish($topic, $message = "{$row['violetChannel']}:state:off");
-                        break;
-                    case 'green':
-                        $mqttChannel = $row['greenChannel'];
-                        mqtt()->publish($topic, $message = "{$row['channel']}:state:off");
-                        mqtt()->publish($topic, $message = "{$row['violetChannel']}:state:off");
-                        break;
-                    case 'violet':
-                        $mqttChannel = $row['violetChannel'];
-                        mqtt()->publish($topic, $message = "{$row['channel']}:state:off");
-                        mqtt()->publish($topic, $message = "{$row['greenChannel']}:state:off");
-                        break;
-                }
+            $deviceId = $row['deviceId'];
+            $topic = "/user/roy/$deviceId";
+            
+            $channel = $channels[$deviceId][$row['channel']];
+            $color = $row['color'];
+            $state = $row['state'];
 
-                $targetTemp = $row['targetTemp'];
-                $currentTemp = $row['currentTemp'];
-                
-                // Add hysteresis offset based on current state to avoid bang bang control
-                if ($state == 1) { // If currently heating
-                    if ($currentTemp < ($targetTemp + 0.3)) {
-                        $pwm = heatingOn($row) * 10;
-                        $message = "$mqttChannel:pwm:$pwm";
-                        $state = 1;  // PWM > 0 means heating is on
-                    } else {
-                        coolingOn($row);
-                        $message = "$mqttChannel:state:off";
-                        $state = 0;  // Cooling means state is off
-                        $row['power'] = 0;
-                    }
-                } else { // If currently cooling or off
-                    if ($currentTemp < ($targetTemp - 0.3)) {
-                        $pwm = heatingOn($row) * 10;
-                        $message = "$mqttChannel:pwm:$pwm";
-                        $state = 1;  // PWM > 0 means heating is on
-                    } else {
-                        coolingOn($row);
-                        $message = "$mqttChannel:state:off";
-                        $state = 0;  // Cooling means state is off
-                        $row['power'] = 0;
-                    }
-                }
 
-                // Update the database with the new currentTemp, state and power
-                $updateSql = "UPDATE channel SET currentTemp = ?, state = ?, power = ? WHERE deviceId = ? AND channel = ?";
-                $stmt = $db->prepare($updateSql);
-
-                if ($stmt) {
-                    $stmt->bind_param("disss", $row['currentTemp'], $state, $row['power'], $deviceId, $channel);
-                    $stmt->execute();
-                    $stmt->close();
-                } else {
-                    // Log error if prepare statement fails
-                    error_log("Database error updating temperature, state and power: " . $db->error);
-                }
-
-                mqtt()->publish($topic, $message);
-            }
+            $channel->setState($state, $color);
+            
         } catch (Exception $e) {
             mqtt(true);
             error_log("MQTT error: " . $e->getMessage());

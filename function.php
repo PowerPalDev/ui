@@ -23,7 +23,7 @@ function mqtt($reconnect = false)
             // MQTT connection parameters
             $server = 'seisho.us';
             $port = 1883;
-            $clientId = 'powerpal_php_backend_1';
+            //$clientId = 'powerpal_php_backend_1';
             $username = null;
             $password = null;
             $clean_session = true;
@@ -37,15 +37,67 @@ function mqtt($reconnect = false)
                 ->setReconnectAutomatically(true)
                 ->setMaxReconnectAttempts(5)
                 ->setDelayBetweenReconnectAttempts(2000) // 2 seconds between reconnect attempts
-                ->setKeepAliveInterval(10);
+                ->setKeepAliveInterval(5);
 
     if ($mqtt === null || $reconnect) {
 
         // Create MQTT client
-        $mqtt = new MqttClient($server, $port, $clientId);
+        $mqtt = new MqttClient($server, $port);
 
         // Connect to the MQTT broker
         $mqtt->connect($connectionSettings);
     }
     return $mqtt;
+}
+
+class Channel{
+    public $deviceId;
+    public $channelBlue;
+    public $channelGreen;
+    public int $state;
+    public $color;
+    
+    public function __construct($deviceId, $channelBlue,
+     $channelGreen, $state, $color){
+        $this->deviceId = $deviceId;
+        $this->channelBlue = $channelBlue;
+        $this->channelGreen = $channelGreen;
+        $this->state = $state;
+        $this->color = $color;
+        $this->publishState();
+    }
+
+    public function setState($state, $color){
+        if($state == $this->state && $color == $this->color){
+            return;
+        }
+        $this->state = $state;
+        $this->color = $color;
+        $this->publishState();
+    }
+
+    public function getState(){
+        return $this->state;
+    }
+
+    public function getStateName(){
+        return $this->state == 1 ? "on" : "off";
+    }
+
+    public function publishState(){
+        $topic = $this->composeTopic();
+        if($this->color == "blue"){
+            echo "deviceId: $topic this->channel: {$this->channelBlue} color: {$this->color} state: {$this->getStateName()} \n";
+            mqtt()->publish($topic, "{$this->channelBlue}:state:{$this->getStateName()}");
+            mqtt()->publish($topic, "{$this->channelGreen}:state:off");
+        }else{
+            echo "deviceId: $topic this->channel: {$this->channelGreen} color: {$this->color} state: {$this->getStateName()} \n";
+            mqtt()->publish($topic, "{$this->channelGreen}:state:{$this->getStateName()}");
+            mqtt()->publish($topic, "{$this->channelBlue}:state:off");
+        }
+    }
+    
+    public function composeTopic(){
+        return "/user/roy/{$this->deviceId}";
+    }
 }
