@@ -1,5 +1,12 @@
 <?php
+require_once 'function.php';
 $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "/";
+
+$sql = "SELECT * FROM channel";
+$result = DB()->query($sql);
+$channels = $result->fetch_all(MYSQLI_ASSOC);
+
+//now compose the table according the channel table
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -45,15 +52,44 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
             <main class="col p-2">
                 <h1 class="sectionTitle mb-4">Devices</h1>
                 <div class="row g-2 cards-grid">
+                    <?php foreach ($channels as $device): 
+                        $chanDevCode = "device='" . htmlspecialchars($device['deviceId']) . "' channel='" . htmlspecialchars($device['channel']) . "'";
+                    ?>
                     <div class="col-12 col-md card-container">
                         <div class="card">
-                            <div class="card-body2 device-card" device="AC1518D6640C" channel="33">
+                            <div class="card-body2 device-card" device="<?php echo htmlspecialchars($device['deviceId']); ?>" channel="<?php echo htmlspecialchars($device['channel']); ?>">
                                 <div class="device-image">
                                     <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo">
                                 </div>
                                 <div class="device-info">
-                                    <span class="card-title">Street Illumination</span>
+                                    <span class="card-title"><?php echo htmlspecialchars($device['name']); ?></span>
                                     <div class="metric">
+                                        <?php if ($device['type'] == "thermostat"): ?>
+                                            <!-- Thermostat -->
+                                        <table class="metric-table">
+                                            <tr>
+                                                <td class="powerReading metric-cell"><i class="fa-solid fa-bolt"></i> <?php echo htmlspecialchars($device['power']); ?> W</td>
+                                                <td class="temperatureReading metric-cell"><i class="fa-solid fa-temperature-half"></i> <?php echo htmlspecialchars($device['currentTemp']); ?>°C</td>
+                                            </tr>
+                                            <tr>
+                                            <td colspan="2">
+                                                    <div class="temperature-controls">
+                                                        <button class="temp-button" onclick="adjustTemperature(event, -0.5)" <?php echo $chanDevCode; ?>>
+                                                            <i class="fas fa-minus" <?php echo $chanDevCode; ?>></i>
+                                                        </button>
+                                                        <span class="targetTemp" <?php echo $chanDevCode; ?>><?php echo htmlspecialchars($device['targetTemp']); ?>°C</span>
+                                                        <button class="temp-button" onclick="adjustTemperature(event, 0.5)" <?php echo $chanDevCode; ?>>
+                                                            <i class="fas fa-plus" <?php echo $chanDevCode; ?>></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <!-- End Thermostat -->
+
+
+                                        <?php elseif ($device['type'] == "light"): ?>
+                                        <!-- Dimmable -->
                                         <table class="metric-table">
                                             <tr class="metric-row">
                                                 <td class="powerReading"></td>
@@ -62,177 +98,46 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
                                             <tr class="desktop-slider">
                                                 <td colspan="2">
                                                     <div class="slider-container">
-                                                        <input type="range" class="custom-slider" min="0" max="100" value="50"  device="AC1518D6640C" channel="33">
+                                                        <input type="range" class="custom-slider" min="0" max="100" value="<?php echo htmlspecialchars($device['duty']); ?>" <?php echo $chanDevCode; ?>>
                                                     </div>
                                                 </td>
                                             </tr>
                                         </table>
-                                    </div>
-                                </div>
-                                <div class="right">
-                                    <button class="power-button blue-border" device="AC1518D6640C" channel="33">
-                                        <i class="fa fa-power-off blue-icon"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="mobile-slider">
-                                    <div class="slider-container">
-                                        <input type="range" class="custom-slider" min="0" max="100" value="50"  device="AC1518D6640C" channel="33">
-                                    </div>
-                                </div>
-                        </div>
-                    </div>
+                                        <!-- End Dimmable -->
 
-                    <div class="col-12 col-md card-container">
-                        <div class="card">
-                            <div class="card-body2 device-card" device="AC1518D6640C" channel="25" >
-                                <div class="device-image">
-                                    <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo">
-                                </div>
-                                <div class="device-info">
-                                    <span class="card-title">Heat Pump</span>
-                                    
-                                    <div class="metric">
+                                        <?php else: ?>
+                                        <!-- Power -->
                                         <table class="metric-table">
-                                            <tr>
-                                                <td class="powerReading metric-cell"><i class="fa-solid fa-bolt"></i> 3.1 W</td>
-                                                <td class="temperatureReading metric-cell"><i class="fa-solid fa-temperature-half"></i> 22°C</td>
-                                            </tr>
-                                            <tr>
-                                            <td colspan="2">
-                                                    <div class="temperature-controls">
-                                                        <button class="temp-button" onclick="adjustTemperature(event, -0.5)">
-                                                            <i class="fas fa-minus"></i>
-                                                        </button>
-                                                        <span class="targetTemp">21.5°C</span>
-                                                        <button class="temp-button" onclick="adjustTemperature(event, 0.5)">
-                                                            <i class="fas fa-plus"></i>
-                                                        </button>
-                                                    </div>
-                                                </td>
+                                            <tr class="metric-row">
+                                                <td class="powerReading"><i class="fa-solid fa-bolt"></i> <?php echo htmlspecialchars($device['power']); ?> W</td>
                                             </tr>
                                         </table>
+                                        <!-- End Power -->
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                                 <div class="right">
-                                    <button class="power-button green-border" device="AC1518D6640C" channel="25">
-                                        <i class="fa fa-power-off green-icon"></i>
+                                    <?php 
+                                    $buttonColor = $device['state'] ? $device['color'] : 'grey';
+                                    ?>
+                                    <button class="power-button <?php echo $buttonColor; ?>-border" <?php echo $chanDevCode; ?>>
+                                        <i class="fa fa-power-off <?php echo $buttonColor; ?>-icon"></i>
                                     </button>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md card-container">
-                        <div class="card">
-                            <div class="card-body2 device-card" device="AC1518D6640C" channel="00">
-                                <div class="device-image">
-                                    <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo">
-                                </div>
-                                <div class="device-info">
-                                    <span class="card-title">Device Name</span>
-                                    <div class="metric">
-                                        <i class="fa-solid fa-link-slash red-icon"></i> offline 1:45
-                                    </div>
-                                </div>
-                            
-                            <div class="right">
-                                    <button class="power-button grey-border" device="AC1518D6640C" channel="00">
-                                        <i class="fa fa-power-off grey-icon"></i>
-                                    </button>
-                                </div>
-                                </div>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md card-container">
-                        <div class="card">
-                            <div class="card-body2 device-card" device="AC1518D6640C" channel="26">
-                                <div class="device-image">
-                                    <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo">
-                                </div>
-                                <div class="device-info">
-                                    <span class="card-title">Device Name</span>
-                                    <div class="metric">
-                                        3.1 W <i class="fa-solid fa-bolt"></i> 231.5 V
-                                    </div>
-                                </div>
-                                <div class="right">
-                                    <button class="power-button green-border" device="AC1518D6640C" channel="26">
-                                        <i class="fa fa-power-off green-icon"></i>
-                                    </button>
+                            <?php if ($device['type'] == "light"): ?>
+                            <div class="mobile-slider">
+                                <div class="slider-container">
+                                    <input type="range" class="custom-slider" min="0" max="100" value="<?php echo htmlspecialchars($device['duty']); ?>" device="<?php echo htmlspecialchars($device['deviceId']); ?>" channel="<?php echo htmlspecialchars($device['channel']); ?>">
                                 </div>
                             </div>
+                            <?php endif; ?>
                         </div>
                     </div>
-
-
-                    <div class="col-12 col-md card-container">
-                        <div class="card" id="device-5">
-                            <div class="card-body2 device-card">
-                                <div class="device-image">
-                                    <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo">
-                                </div>
-                                <div class="device-info">
-                                    <span class="card-title">Device Name</span>
-                                    <div class="metric">
-                                        2.4 kW <i class="fa-solid fa-bolt"></i> 231.5 V
-                                    </div>
-                                </div>
-                                <div class="right">
-                                    <button class="power-button violet-border">
-                                        <i class="fa fa-power-off violet-icon"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md card-container">
-                        <div class="card" id="device-4">
-                            <div class="card-body2 device-card">
-                                <div class="device-image">
-                                    <img src="https://ds.seisho.us/img/smartPlug.png" alt="PowerPal Logo">
-                                </div>
-                                <div class="device-info">
-                                    <span class="card-title">Device Name</span>
-                                    <div class="metric">
-                                        3.1 W <i class="fa-solid fa-bolt"></i> 231.5 V
-                                    </div>
-                                </div>
-                                <div class="right">
-                                    <button class="power-button grey-border">
-                                        <i class="fa fa-power-off grey-icon"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
+                    <?php endforeach; ?>
                 </div>
                 <!-- Add your main content here -->
             </main>
-
-            <!-- Right info panel -->
-            <!--
-            <div id="right-panel" class="col-md-3 col-lg-2 p-0">
-                <div style="height: 32px; background-color: #242527; position: relative; border-top-left-radius: 18px;">
-                    <button type="button" class="panel-close" aria-label="Close"
-                        style="font-size: 26px; position: absolute; right: 10px; top: 5px; background: none; border: none; color: silver;">
-                        <i class="fa-solid fa-times"></i>
-                    </button>
-                </div>
-                <div class="p-3">
-                    <h3>Info Panel</h3>
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <h5 class="card-title">Information</h5>
-                            <p class="card-text">Additional information can be displayed here.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            -->
         </div>
     </div>
 
@@ -582,15 +487,17 @@ $backendAddress = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "
             window.adjustTemperature = function(e, delta) {
                 e.stopPropagation(); // Prevent event bubbling
                 
-                const tempSpan = document.querySelector('.targetTemp');
+                let deviceId = e.target.getAttribute('device');
+                let channel = e.target.getAttribute('channel');
+
+
+                const tempSpan = document.querySelector('.targetTemp[device="' + deviceId + '"][channel="' + channel + '"]');
                 let targetTemp = parseFloat(tempSpan.textContent);
                 targetTemp += delta;
                 // Round to nearest 0.5
                 targetTemp = Math.round(targetTemp * 2) / 2;
                 tempSpan.textContent = targetTemp.toFixed(1) + '°C';
                 
-                const deviceId = 'AC1518D6640C';
-                const channel = '25';
 
                 window.pausePolling = true;
                 if (window.pollInterval) {

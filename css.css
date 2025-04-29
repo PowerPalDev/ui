@@ -646,3 +646,7 @@ body {
     cursor: pointer;
     border: 2px solid var(--color-green-faint);
 }
+
+.card:hover {
+    transform: scale(0.98) !important;
+}

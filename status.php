@@ -38,13 +38,13 @@ while ($row = $result->fetch_assoc()) {
         $colorString = 'grey';
     }
 
-    if($row['isDimmable'] == 1) {
+    if($row['type'] == "light") {
         $duty = $row['duty'];
     } else {
         $duty = 0;
     }
 
-    if($row['isThermostat'] == 1) {
+    if($row['type'] == "thermostat") {
         $currentTemp = number_format($row['currentTemp'], 2);
         $targetTemp = number_format($row['targetTemp'], 1);
     } else {
@@ -57,9 +57,9 @@ while ($row = $result->fetch_assoc()) {
         'color' => $colorString,
         'power' => (float)$row['power'], // Convert to same format as original
         'state' => $row['state'] ? 'on' : 'off',
-        'isDimmable' => $row['isDimmable'],
+        'isDimmable' => $row['type'] == "light",
         'duty' => $duty,
-        'isThermostat' => $row['isThermostat'],
+        'isThermostat' => $row['type'] == "thermostat",
         'currentTemp' => $currentTemp,
         'targetTemp' => $targetTemp,
     ];

@@ -33,7 +33,7 @@ while (true) {
     $result = $db->query($query);
     while ($row = $result->fetch_assoc()) {
         try {
-            if ($row['isThermostat'] == 1) {
+            if ($row['type'] == "thermostat") {
                 $deviceId = $row['deviceId'];
                 $topic = "/user/roy/$deviceId";
                 $channel = $row['channel'];
