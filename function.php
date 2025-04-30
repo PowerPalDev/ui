@@ -23,10 +23,10 @@ function mqtt($reconnect = false)
             // MQTT connection parameters
             $server = 'seisho.us';
             $port = 1883;
-            //$clientId = 'powerpal_php_backend_1';
+            $clientId = 'powerpal_php_backend_1' . uniqid();
             $username = null;
             $password = null;
-            $clean_session = true;
+            $clean_session = false;
             $mqtt_version = MqttClient::MQTT_3_1_1;
     
             // Create MQTT connection settings
@@ -45,7 +45,7 @@ function mqtt($reconnect = false)
         $mqtt = new MqttClient($server, $port);
 
         // Connect to the MQTT broker
-        $mqtt->connect($connectionSettings);
+        $mqtt->connect($connectionSettings, $clientId);
     }
     return $mqtt;
 }
@@ -88,12 +88,20 @@ class Channel{
         $topic = $this->composeTopic();
         if($this->color == "blue"){
             echo "deviceId: $topic this->channel: {$this->channelBlue} color: {$this->color} state: {$this->getStateName()} \n";
-            mqtt()->publish($topic, "{$this->channelBlue}:state:{$this->getStateName()}");
-            mqtt()->publish($topic, "{$this->channelGreen}:state:off");
+            $msg1 = "{$this->channelBlue}:state:{$this->getStateName()}";
+            $msg2 = "{$this->channelGreen}:state:off";
+            echo "msg1: $msg1 \n";
+            echo "msg2: $msg2 \n";
+            mqtt()->publish($topic, $msg1);
+            mqtt()->publish($topic, $msg2);
         }else{
-            echo "deviceId: $topic this->channel: {$this->channelGreen} color: {$this->color} state: {$this->getStateName()} \n";
-            mqtt()->publish($topic, "{$this->channelGreen}:state:{$this->getStateName()}");
-            mqtt()->publish($topic, "{$this->channelBlue}:state:off");
+            echo "deviceId: $topic this->channel: {$this->channelBlue} color: {$this->color} state: {$this->getStateName()} \n";
+            $msg1 = "{$this->channelGreen}:state:{$this->getStateName()}";
+            $msg2 = "{$this->channelBlue}:state:off";
+            echo "msg1: $msg1 \n";
+            echo "msg2: $msg2 \n";
+            mqtt()->publish($topic, $msg1);
+            mqtt()->publish($topic, $msg2);
         }
     }
     

@@ -49,7 +49,6 @@ while (true) {
     while ($row = $result->fetch_assoc()) {
         try {
             $deviceId = $row['deviceId'];
-            $topic = "/user/roy/$deviceId";
             
             $channel = $channels[$deviceId][$row['channel']];
             $color = $row['color'];
