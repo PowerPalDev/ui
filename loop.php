@@ -62,4 +62,5 @@ while (true) {
             error_log("MQTT error: " . $e->getMessage());
         }
     }
+    mqtt()->disconnect();
 }
