@@ -47,6 +47,7 @@ while (true) {
     $query = "SELECT * FROM channel";
     $result = $db->query($query);
     while ($row = $result->fetch_assoc()) {
+	mqtt(true);
         try {
             $deviceId = $row['deviceId'];
             
@@ -61,5 +62,6 @@ while (true) {
             mqtt(true);
             error_log("MQTT error: " . $e->getMessage());
         }
+	mqtt()->disconnect();
     }
 }

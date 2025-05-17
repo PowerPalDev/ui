@@ -8,9 +8,9 @@ function DB()
     static $db;
     if ($db === null) {
         // Database connection
-        $db = new mysqli('127.0.0.1', 'roy', 'roy', 'dsTest1');
-
-        if ($db->connect_error) {
+	 $db = new mysqli('10.110.206.1', 'dsTest1', 'dsTest1', 'dsTest1');
+        
+if ($db->connect_error) {
             die(json_encode(['error' => 'Database connection failed: ' . $db->connect_error]));
         }
     }
@@ -30,14 +30,12 @@ function mqtt($reconnect = false)
             $mqtt_version = MqttClient::MQTT_3_1_1;
     
             // Create MQTT connection settings
-            $connectionSettings = (new ConnectionSettings)
-                ->setUsername($username)
-                ->setPassword($password)
-                ->setConnectTimeout(connectTimeout: 10)
-                ->setReconnectAutomatically(true)
-                ->setMaxReconnectAttempts(5)
-                ->setDelayBetweenReconnectAttempts(2000) // 2 seconds between reconnect attempts
-                ->setKeepAliveInterval(5);
+        $connectionSettings = (new ConnectionSettings)
+            ->setUsername($username)
+            ->setPassword($password)
+            ->setConnectTimeout(connectTimeout: 10)
+            ->setReconnectAutomatically(false) // Disable auto reconnect since it conflicts with clean_session
+            ->setKeepAliveInterval(5);
 
     if ($mqtt === null || $reconnect) {
 
