@@ -64,4 +64,5 @@ while (true) {
         }
 	mqtt()->disconnect();
     }
+    mqtt()->disconnect();
 }
