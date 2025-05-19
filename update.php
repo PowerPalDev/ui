@@ -13,12 +13,8 @@ $duty = null;
 $temperature = isset($_GET['temperature']) ? $_GET['temperature'] : null;
 
 //read from the db the current state of this row
-$query = "SELECT * FROM channel WHERE deviceId = ? AND channel = ?";
-$stmt = $db->prepare($query);
-$stmt->bind_param('ss', $deviceId, $channel);
-$stmt->execute();
-$result = $stmt->get_result();
-$row = $result->fetch_assoc();
+
+$channel = Channel::load($deviceId, $channel);
 
 // Prepare the base update SQL
 $updateFields = [];
@@ -28,14 +24,17 @@ $currentTime = time();
 if (isset($_GET['state'])) {
     $state = $_GET['state'];
     if ($state == 'on') {
-        $duty = 100;
+        $channel->setDuty(100);
+        $channel->setState(1);
     } else {
-        $duty = 0;
+        $channel->setDuty(0);
+        $channel->setState(0);
     }
 }
 
 if (isset($_GET['duty'])) {
     $duty = $_GET['duty'];
+    echo "duty: $duty\n";
     if ($duty > 100) {
         $duty = 100;
     }
@@ -44,95 +43,8 @@ if (isset($_GET['duty'])) {
     }
 
     if ($duty == 0) {
-        $state = 'off';
-    } else {
-        $state = 'on';
+        $channel->setState(0);
     }
 
+    $channel->setDuty($duty);
 }
-
-if (isset($_GET['duty'])) {
-    $message = "$channel:pwm:" . ($duty * 10);
-    mqtt()->publish("/user/roy/$deviceId", $message);
-}
-
-if($duty) {
-    $updateFields[] = "duty = ?";
-    $updateValues[] = $duty;  // Convert to same scale as stored in DB
-}
-
-
-if($state) {
-    $updateFields[] = "state = ?";
-    $updateValues[] = ($state === 'on') ? 1 : 0;
-}
-$stateInt = $state === 'on' ? 1 : 0;
-
-
-if ($temperature !== null) {
-    //the device is not really a thermostat, so we only update the db
-    $updateFields[] = "targetTemp = ?";
-    $updateValues[] = $temperature;
-    
-    //$message = "$channel:temperature:$temperature";
-    //$mqtt->publish("/user/roy/$deviceId", $message);
-}
-
-// Always update lastUpdate time
-$updateFields[] = "lastUpdate = ?";
-$updateValues[] = $currentTime;
-
-if (count($updateFields) > 0) {
-    // Construct the SQL query
-    $sql = "UPDATE channel SET " . implode(", ", $updateFields) . 
-           " WHERE deviceId = ? AND channel = ?";
-    
-    // Add deviceId and channel to values array
-    $updateValues[] = $deviceId;
-    $updateValues[] = $channel;
-    
-    // Prepare and execute the statement
-    $stmt = $db->prepare($sql);
-    
-    if ($stmt) {
-        // Create type string for bind_param
-        $types = str_repeat('s', count($updateValues));
-        $stmt->bind_param($types, ...$updateValues);
-        
-        $stmt->execute();
-        
-        if ($stmt->affected_rows > 0) {
-            $response = [
-                'success' => true,
-                'message' => "Updated device $deviceId channel $channel",
-                'updates' => [
-                    'state' => $state,
-                    'duty' => $duty,
-                    'temperature' => $temperature
-                ]
-            ];
-        } else {
-            $response = [
-                'success' => false,
-                'message' => "No matching record found for device $deviceId channel $channel"
-            ];
-        }
-        
-        $stmt->close();
-    } else {
-        $response = [
-            'success' => false,
-            'message' => "Database error: " . $db->error
-        ];
-    }
-} else {
-    $response = [
-        'success' => false,
-        'message' => "No update parameters provided"
-    ];
-}
-$c = new Channel($deviceId, $row['channel'], $row['greenChannel'], $stateInt, $row['color']);
-
-// Send JSON response
-header('Content-Type: application/json');
-echo json_encode($response);
