@@ -32,14 +32,7 @@ $result = $db->query($query);
 $channels = [];
 
 foreach($result as $row){
-    print_r($row);
-    $channels[$row['deviceId']][$row['channel']] = new Channel(
-        $row['deviceId'], 
-        $row['channel'],
-        $row['greenChannel'],
-        $row['state'],
-        $row['color']
-    );
+    $channels[$row['deviceId']][$row['channel']] = Channel::fromRow($row);
 }
 
 while (true) {
@@ -47,22 +40,20 @@ while (true) {
     $query = "SELECT * FROM channel";
     $result = $db->query($query);
     while ($row = $result->fetch_assoc()) {
-	mqtt(true);
         try {
             $deviceId = $row['deviceId'];
             
+            //use the old version
             $channel = $channels[$deviceId][$row['channel']];
-            $color = $row['color'];
-            $state = $row['state'];
-
-
-            $channel->setState($state, $color);
+            $channel->color = $row['color'];
+            
+            $channel->setState($row['state']);
+            $channel->setDuty($row['duty']);
             
         } catch (Exception $e) {
             mqtt(true);
             error_log("MQTT error: " . $e->getMessage());
         }
-	mqtt()->disconnect();
+	
     }
-    mqtt()->disconnect();
 }
