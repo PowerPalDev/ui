@@ -15,6 +15,7 @@ $temperature = isset($_GET['temperature']) ? $_GET['temperature'] : null;
 //read from the db the current state of this row
 
 $channel = Channel::load($deviceId, $channel);
+$channel->noMqttSync = true;
 
 // Prepare the base update SQL
 $updateFields = [];

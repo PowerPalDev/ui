@@ -45,13 +45,12 @@ while (true) {
             
             //use the old version
             $channel = $channels[$deviceId][$row['channel']];
-            $channel->color = $row['color'];
-            
+
+            $channel->setColor($row['color']);
             $channel->setState($row['state']);
             $channel->setDuty($row['duty']);
             
         } catch (Exception $e) {
-            mqtt(true);
             error_log("MQTT error: " . $e->getMessage());
         }
 	

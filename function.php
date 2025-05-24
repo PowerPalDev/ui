@@ -67,6 +67,25 @@ function mqtt($reconnect = false)
     return $mqtt;
 }
 
+function publish($topic, $msg)
+{
+    
+    try{
+        mqtt()->publish($topic, $msg);
+    } catch (Exception $e) {
+        error_log("MQTT first publish error: " . $e->getMessage());
+        //force reconnect
+        mqtt(true);
+        //an try to publish again   
+        try{
+            mqtt()->publish($topic, $msg);
+        } catch (Exception $e) {
+            error_log("MQTT second publish error: " . $e->getMessage());
+        }
+    }   
+    
+}
+
 class Channel
 {
     public $deviceId;
@@ -77,6 +96,7 @@ class Channel
     public $duty;
     public $currentTemp;
     public $targetTemp;
+    public $noMqttSync = false;
 
     public function __construct(
         $deviceId,
@@ -155,6 +175,25 @@ class Channel
         $this->updateDB();
     }
 
+    public function setColor($color)
+    {
+        if ($color == $this->color) {
+            return;
+        }
+        $this->color = $color;
+        $this->updateDB();
+        $this->publishColor();
+    }
+    
+    public function publishColor()
+    {
+        //turn off the other channel
+        $this->turnOffOtherChannel();
+        
+        //publish the duty
+        $this->publishDuty();
+    }
+    
     public function getDuty()
     {
         return $this->duty;
@@ -180,8 +219,7 @@ class Channel
         return $this->state == 1 ? "on" : "off";
     }
 
-    public function updateDB()
-    {
+    public function updateDB()     {
         $db = DB();
         $query = <<<EOD
 UPDATE channel SET 
@@ -221,7 +259,15 @@ EOD;
 
     public function getOtherChannel($color = null)
     {
-        if ($color == "blue") {
+        if($color != null){
+            if($color == "blue"){
+                return $this->channelGreen;
+            } else {
+                return $this->channelBlue;
+            }
+        }
+
+        if ($this->color == "blue") {
             return $this->channelGreen;
         } else {
             return $this->channelBlue;
@@ -235,35 +281,35 @@ EOD;
 
         $topic = $this->composeTopic();
         $msg = "{$this->getChannel()}:duty:{$this->duty}";
-        mqtt()->publish($topic, $msg);
+        if(!$this->noMqttSync){
+            publish($topic, $msg);
+        }
     }
 
     public function publishState()
     {
+        if($this->duty > 0){
+            return;
+        }
+        
+        
         $topic = $this->composeTopic();
         $msg = "{$this->getChannel()}:state:{$this->getStateName()}";
-        mqtt()->publish($topic, $msg);
-        //now force turn off the other channel
-        $otherChannel = $this->getOtherChannel();
-        $otherChannel->setState(0);
-        echo "deviceId: $topic this->channel: {$this->channelBlue} color: {$this->color} state: {$this->getStateName()} \n";
+        if(!$this->noMqttSync){
+            publish($topic, $msg);
+        }
 
-        if ($this->color == "blue") {
-            echo "deviceId: $topic this->channel: {$this->channelBlue} color: {$this->color} state: {$this->getStateName()} \n";
-            $msg1 = "{$this->channelBlue}:state:{$this->getStateName()}";
-            $msg2 = "{$this->channelGreen}:state:off";
-            echo "msg1: $msg1 \n";
-            echo "msg2: $msg2 \n";
-            mqtt()->publish($topic, $msg1);
-            mqtt()->publish($topic, $msg2);
-        } else {
-            echo "deviceId: $topic this->channel: {$this->channelBlue} color: {$this->color} state: {$this->getStateName()} \n";
-            $msg1 = "{$this->channelGreen}:state:{$this->getStateName()}";
-            $msg2 = "{$this->channelBlue}:state:off";
-            echo "msg1: $msg1 \n";
-            echo "msg2: $msg2 \n";
-            mqtt()->publish($topic, $msg1);
-            mqtt()->publish($topic, $msg2);
+        //now force turn off the other channel
+        $this->turnOffOtherChannel();
+    }
+
+    public function turnOffOtherChannel()
+    {
+        $topic = $this->composeTopic();
+        $otherChannel = $this->getOtherChannel();
+        $msg = "{$otherChannel}:state:off";
+        if(!$this->noMqttSync){
+            publish($topic, $msg);
         }
     }
 
