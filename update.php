@@ -65,6 +65,8 @@ if (isset($_GET['duty'])) {
             //Special logic, when the wind turbine is on the GREEN CHANNEL is FORCED ON, but only on some devices
             setColor('green', $limit);
         }
+        
+        $channel->setState(1);
     }
     
 
