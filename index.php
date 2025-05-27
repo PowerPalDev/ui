@@ -273,6 +273,7 @@ $channels = $result->fetch_all(MYSQLI_ASSOC);
 
 
         // Close panel when clicking outside (optional)
+        /*
         document.addEventListener('click', function(event) {
             const isClickInside = rightPanel.contains(event.target) || mainContent.contains(event
                 .target);
@@ -280,6 +281,7 @@ $channels = $result->fetch_all(MYSQLI_ASSOC);
                 togglePanel();
             }
         });
+        */
 
         // Add power button functionality
         const powerButtons = document.querySelectorAll('.power-button');
