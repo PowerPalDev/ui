@@ -337,7 +337,11 @@ $channels = $result->fetch_all(MYSQLI_ASSOC);
             if (window.pausePolling) {
                 return;
             }
-            return;
+            //Disable polling here
+            if (window.forcePausePolling) {
+                return;
+            }
+            // return;
 
             fetch(backendAddress + 'ui/status.php')
                 .then(response => response.json())

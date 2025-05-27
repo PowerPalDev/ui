@@ -22,12 +22,22 @@ $updateFields = [];
 $updateValues = [];
 $currentTime = time();
 
+
+
 if (isset($_GET['state'])) {
     $state = $_GET['state'];
     if ($state == 'on') {
+        if($deviceId == "DC1ED5E62AA8"){
+            //Special logic, when the wind turbine is on the GREEN CHANNEL is FORCED ON
+            setColor('green');
+        }
         $channel->setDuty(100);
         $channel->setState(1);
     } else {
+        if($deviceId == "DC1ED5E62AA8"){
+            //Special logic, when the wind turbine is on the GREEN CHANNEL is FORCED ON
+            setColor('blue');
+        }
         $channel->setDuty(0);
         $channel->setState(0);
     }
@@ -45,7 +55,28 @@ if (isset($_GET['duty'])) {
 
     if ($duty == 0) {
         $channel->setState(0);
+        if($deviceId == "DC1ED5E62AA8"){
+            //Special logic, when the wind turbine is on the GREEN CHANNEL is FORCED ON
+            setColor('blue');
+        }
+    }else{
+        if($deviceId == "DC1ED5E62AA8"){
+            $limit = (int)($duty / 10);
+            //Special logic, when the wind turbine is on the GREEN CHANNEL is FORCED ON, but only on some devices
+            setColor('green', $limit);
+        }
     }
+    
 
     $channel->setDuty($duty);
+}
+
+function setColor($color, $colorCount = null){
+    $limit = "";
+    if($colorCount != null){
+        $limit = " LIMIT $colorCount";
+    }
+    $sql = "UPDATE channel SET color = '$color' ORDER BY RAND() $limit";
+    echo "setColor: $sql";
+    DB()->query($sql);
 }
